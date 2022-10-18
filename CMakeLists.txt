@@ -33,8 +33,8 @@ endif()
 
 add_subdirectory("src")
 
-target_include_directories(ARMNN_test /usr/include)
-find_library(BOOST)
+#target_include_directories(ARMNN_test /usr/include)
+#find_library(BOOST)
 target_link_libraries(ARMNN_test
                         armnn
                         timelineDecoderJson
