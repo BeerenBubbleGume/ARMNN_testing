@@ -33,11 +33,12 @@ endif()
 
 add_subdirectory("src")
 
-#target_include_directories(ARMNN_test /usr/local/include)
-
+target_include_directories(ARMNN_test /usr/include)
+find_library(BOOST)
 target_link_libraries(ARMNN_test
                         armnn
                         timelineDecoderJson
                         timelineDecoder
                         armnnBasePipeServer
-                        opencv4)
+                        opencv4
+                        boost)

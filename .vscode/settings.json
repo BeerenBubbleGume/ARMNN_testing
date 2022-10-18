@@ -1,0 +1,18 @@
+{
+    "files.associations": {
+        "*.h": "cpp",
+        "vector": "cpp",
+        "array": "cpp",
+        "chrono": "cpp",
+        "string": "cpp",
+        "unordered_set": "cpp",
+        "functional": "cpp",
+        "initializer_list": "cpp",
+        "ostream": "cpp",
+        "sstream": "cpp",
+        "stdexcept": "cpp",
+        "type_traits": "cpp",
+        "tuple": "cpp",
+        "*.tcc": "cpp"
+    }
+}
