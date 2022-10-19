@@ -27,6 +27,7 @@ numcpp::ndarray ABC::letterbox(numcpp::ndarray image, tuple<int, int> expected_s
     auto newImage = numcpp::array(boost::python::api::object((eh, ew, 3)), 
                                     numcpp::dtype('uint8'));
     
+    return newImage;
 }
 
 numcpp::ndarray draw_line(numcpp::ndarray image, int x, int y, int x1, int y1, 
@@ -42,9 +43,21 @@ numcpp::ndarray draw_line(numcpp::ndarray image, int x, int y, int x1, int y1,
     return image;
 }
 
-numcpp::ndarray ABC::draw_visual(numcpp::ndarray image, numcpp::ndarray __boxes, numcpp::ndarray __sources,
-                        numcpp::ndarray __classes, list<string> class_labels, list<string> class_colors){
-
+numcpp::ndarray ABC::draw_visual(numcpp::ndarray image, numcpp::ndarray __boxes, numcpp::ndarray __scores,
+                        numcpp::ndarray __classes, vector<string> class_labels, vector<string> class_colors){
+    auto _box_color = {255, 0, 0};
+    auto img_src = numcpp::array(image);
+    for (auto i = 0; __classes.ptr() != nullptr; ++i){
+        for (auto c = 0; __classes.ptr() != nullptr; ++c){
+            auto predictedClass = class_labels[c];
+            vector<boost::python::api::object_item> box;
+            auto score = __scores[i];
+            vector<string> boxColor;
+            boxColor.push_back(class_colors[c]);
+            box.push_back(__boxes[i]);
+            
+        }
+    }
 }
 
 std::function<int(float)> display_process_time(function<int(float)> func){
@@ -57,4 +70,23 @@ numcpp::ndarray ABC::preprocessInput(numcpp::ndarray image){
         image[i] = image[i] / 255.0;
     }
     return image;
+}
+
+map<string, vector<vector<void>>> TRTModule::trtInference(vector<vector<void>> intpuData, vector<vector<void>> imgz){
+
+}
+void TRTModule::startNN(string videoSrc, string outputPath, int fps){
+
+}
+
+vector<vector<void>> TRTModule::extractImage(vector<vector<void>>){
+
+}
+
+TRTModule::TRTModule(string pathModel, string pathClasses){
+
+}
+
+TRTModule::~TRTModule(){
+    
 }

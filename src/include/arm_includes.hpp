@@ -5,6 +5,7 @@
 #include <opencv4/opencv2/opencv.hpp>
 #include <vector>
 #include <stdint.h>
+#include <map>
 #include <list>
 #include <cmath>
 #include <string>
@@ -26,4 +27,5 @@ using std::tuple;
 using std::ifstream;
 using std::ofstream;
 using std::function;
+using std::map;
 #endif
