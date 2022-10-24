@@ -20,7 +20,7 @@ public:
     bboxes();
     virtual ~bboxes();
     
-    static mvector<2, int> yolo_correct_boxes(mvector<1, int> box_xy, mvector<1, int> box_wh, 
+    static nc::NdArray<int>  yolo_correct_boxes(nc::NdArray<int>  box_xy, nc::NdArray<int>  box_wh, 
                                 tuple<int, int> input_shape, tuple<int, int> image_shape);
     
 };

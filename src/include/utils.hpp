@@ -7,21 +7,23 @@
 #include <time.h>
 
 struct ABC{
-    static tuple<list<string>, int> get_classes(string classes_path);
-    static numcpp::ndarray letterbox(numcpp::ndarray image, tuple<int ,int> expected_size);
-    static numcpp::ndarray draw_visual(numcpp::ndarray image, mvector<2, double> __boxes, numcpp::ndarray __sources,
-                        numcpp::ndarray __classes, vector<string> class_labels, vector<string> class_colors);
-    static numcpp::ndarray preprocessInput(numcpp::ndarray image);
+    static vector<string> get_classes(string classes_path);
+    static nc::NdArray<int> letterbox(nc::NdArray<int> image, tuple<int ,int> expected_size);
+    static nc::NdArray<int> draw_visual(nc::NdArray<double> image, nc::NdArray<double> __boxes, nc::NdArray<double> __sources,
+                        nc::NdArray<string> __classes, vector<string> class_labels, vector<double> class_colors);
+    static nc::NdArray<double> preprocessInput(nc::NdArray<double> image);
 };
 
-numcpp::ndarray draw_line(numcpp::ndarray image, int x, int y, int x1, int y1, 
+nc::NdArray<double> draw_line(nc::NdArray<double> image, int x, int y, int x1, int y1, 
                     list<double> color, int l = 35, int t = 1);
 
-std::function<int(float)> display_process_time(function<int(float)>);
+void display_process_time();
+
+void setVaraibles(vector<void> inData, vector<void> outArray);
 
 class TRTModule : public ABC{
 protected:
-    list<string> classLabels;
+    vector<string> classLabels;
     const string inputName;
     const string outputName;
     int numNames;

@@ -1,8 +1,8 @@
 #include "../include/utils.hpp"
 
-tuple<list<string>, int> ABC::get_classes(string classes_path){
+vector<string> ABC::get_classes(string classes_path){
     ifstream in(classes_path);
-    list<string> classes_names;
+    vector<string> classes_names;
     string classStr;
     if(in.is_open()){
         while(std::getline(in, classStr)){
@@ -12,25 +12,31 @@ tuple<list<string>, int> ABC::get_classes(string classes_path){
         }
     }
 
-    tuple<list<string>, int> ret(classes_names, classes_names.size());
-    return ret;
+    return classes_names;
 }
 
-numcpp::ndarray ABC::letterbox(numcpp::ndarray image, tuple<int, int> expected_size){
-    auto [ih, iw] = tuple<int, int>(*(image.get_shape()), *(image.get_shape()));
+void setVaraibles(vector<void> inData, vector<vector<void>> outArray){
+    if(!inData.empty()){
+        for (auto i : inData){
+            memcpy(&outArray, i, sizeof(i));
+        }
+    }
+}
+
+nc::NdArray<int> ABC::letterbox(nc::NdArray<int> image, tuple<int ,int> expected_size){
+    auto [ih, iw] = image.shape();
     auto [eh, ew] = expected_size;
     auto scale = std::min(eh / iw, ew / iw);
     auto nh = int(ih*scale);
     auto nw = int(iw * scale);
 
     cv::resize(*(cv::_InputArray*)&image, *(cv::_OutputArray*)&image, cv::Size(nw, nh), 0.0, 0.0, cv::INTER_CUBIC);
-    auto newImage = numcpp::array(boost::python::api::object((eh, ew, 3)), 
-                                    numcpp::dtype('uint8'));
+    auto newImage = nc::full(nc::Shape(eh, ew), 128);
     
     return newImage;
 }
 
-numcpp::ndarray draw_line(numcpp::ndarray image, int x, int y, int x1, int y1, 
+nc::NdArray<double> draw_line(nc::NdArray<double> image, int x, int y, int x1, int y1, 
                     list<double> color, int l, int t){
     cv::line((cv::InputOutputArray)image, cv::Point(x, y), cv::Point(x + l, y), cv::Scalar_(color), t);
     cv::line((cv::InputOutputArray)image, cv::Point(x, y), cv::Point(x, y + l), cv::Scalar_(color), t);
@@ -43,34 +49,45 @@ numcpp::ndarray draw_line(numcpp::ndarray image, int x, int y, int x1, int y1,
     return image;
 }
 
-numcpp::ndarray ABC::draw_visual(numcpp::ndarray image, mvector<2, double> __boxes, numcpp::ndarray __scores,
-                        numcpp::ndarray __classes, vector<string> class_labels, vector<string> class_colors){
+nc::NdArray<int> ABC::draw_visual(nc::NdArray<double> image, nc::NdArray<double> __boxes, nc::NdArray<double> __scores,
+                        nc::NdArray<string> __classes, vector<string> class_labels, vector<double> class_colors){
     auto _box_color = {255, 0, 0};
-    auto img_src = numcpp::array(image);
-    for (auto i = 0; __classes.ptr() != nullptr; ++i){
-        for (auto c = 0; __classes.ptr() != nullptr; ++c){
+    auto img_src = nc::NdArray(image);
+    for (auto i = 0; i < __classes.size(); ++i){
+        for (auto c = 0;  c < __classes.size(); ++c){
             auto predictedClass = class_labels[c];
             list<double> box;
             auto score = __scores[i];
-            vector<string> boxColor;
+            vector<double> boxColor;
             boxColor.push_back(class_colors[c]);
-            box.push_back(__boxes);
-            auto [y_min, x_min] = box.data();
-            cv::rectangle(img_src, cv::Rect(x_min, y_min, x_max, y_max), cv::Scalar(_box_color.begin()), 1);
+            box.push_back(__boxes[i]);
+            vector<tuple<int, int>> y_min_x_min;
+            vector<tuple<int, int>> y_max_x_max;
+            
+            cv::rectangle(cv::InputOutputArray(img_src), cv::Rect(x_min, y_min, x_max, y_max), cv::Scalar(*boxColor.data()), 1);
 
         }
     }
 }
 
-std::function<int(float)> display_process_time(function<int(float)> func){
-
-    float decorated(int* args, float* argv[]){
-        auto start = time::perf_counter();
+void display_process_time(){
+    double sum = 0;
+    double add = 1;
+    auto begin = std::chrono::high_resolution_clock::now();
+    
+    int iterations = 1000*1000*1000;
+    for (int i=0; i<iterations; i++) {
+        sum += add;
+        add /= 2.0;
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
+    
+    printf("Result: %.20f\n", sum);
 }
 
-numcpp::ndarray ABC::preprocessInput(numcpp::ndarray image){
-    for (auto i = 0; i < *image.get_shape(); ++i){
+nc::NdArray<double> ABC::preprocessInput(nc::NdArray<double> image){
+    for (int i : image){
         image[i] = image[i] / 255.0;
     }
     return image;
@@ -104,8 +121,10 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
 }
 
 vector<vector<void>> TRTModule::extractImage(auto img){
-    vector<cv::UMat> _img = img;
-    
+    nc::NdArray<float> inputImageShape = nc::exp(nc::NdArray<float>(image.shape[0], image.shape[1]), 0);
+    auto imageData = letterbox(img, tuple<int, int>(imageShape[1], imageShape[0]));
+    imageData = imageData.transpose(preprocessInput(nc::NdArray(imageData)));
+
 }
 
 void TRTModule::loadModelAndPredict(string pathModel){
@@ -113,19 +132,19 @@ void TRTModule::loadModelAndPredict(string pathModel){
     armnn::INetworkPtr network = parser->CreateNetworkFromBinaryFile(pathModel.c_str());
 
     const size_t subgraphId = 0;
-    armnnOnnxParser::BindingPointInfo inputInfo = parser->GetNetworkInputBindingInfo(subgraphId, inputName);
-    armnnOnnxParser::BindingPointInfo outputInfo = parser->GetNetworkOutputBindingInfo(subgraphId, outputName);
+    armnnOnnxParser::BindingPointInfo inputInfo = parser->GetNetworkInputBindingInfo(inputName);
+    armnnOnnxParser::BindingPointInfo outputInfo = parser->GetNetworkOutputBindingInfo(outputName);
 
-    const unsigned int outputNumElements = modelOutputLabels.size();
-    vector<TContainer> outputDataContainers = {vector<uint8_t>(outputNumElements)};
-
+    const unsigned int outputNumElements = classLabels.size();
+    vector<auto> outputDataContainers = {vector<uint8_t>(outputNumElements)};
+    
 }
 
 TRTModule::TRTModule(string pathModel, string pathClasses){
-    bboxes = new bboxes;
-    imageShape{640, 640};
-    classLabels.push_back(get_classes(pathClasses));
-
+    this->bboxes = new bboxes;
+    imageShape = {640, 640};
+    classLabels.push_back(*get_classes(pathClasses).data());
+    loadModelAndPredict(pathModel);
 }
 
 TRTModule::~TRTModule(){

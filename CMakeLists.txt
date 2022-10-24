@@ -41,4 +41,5 @@ target_link_libraries(ARMNN_test
                         timelineDecoder
                         armnnBasePipeServer
                         opencv4
+                        NumCpp
                         boost)
