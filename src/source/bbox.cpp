@@ -1,6 +1,6 @@
 #include "../include/bbox.hpp"
 
-numcpp::ndarray bboxes::yolo_correct_boxes(numcpp::ndarray box_xy, numcpp::ndarray box_wh, 
+mvector<2, int> bboxes::yolo_correct_boxes(mvector<1, int> box_xy, mvector<1, int> box_wh, 
                                 tuple<int, int> input_shape, tuple<int, int> image_shape){
 
 

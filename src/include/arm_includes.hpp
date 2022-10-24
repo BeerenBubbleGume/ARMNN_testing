@@ -2,6 +2,7 @@
 #ifndef ARM_INCLUDES_HPP
 #define ARM_INCLUDES_HPP
 #include <armnn/ArmNN.hpp>
+#include <armnnOnnxParser/IOnnxParser.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 #include <vector>
 #include <stdint.h>
