@@ -49,25 +49,26 @@ nc::NdArray<double> draw_line(nc::NdArray<double> image, int x, int y, int x1, i
     return image;
 }
 
-nc::NdArray<int> ABC::draw_visual(nc::NdArray<double> image, nc::NdArray<double> __boxes, nc::NdArray<double> __scores,
+nc::NdArray<double> ABC::draw_visual(nc::NdArray<double> image, nc::NdArray<double> __boxes, nc::NdArray<double> __scores,
                         nc::NdArray<string> __classes, vector<string> class_labels, vector<double> class_colors){
-    auto _box_color = {255, 0, 0};
+    list<double> _box_color = {255., 0., 0.};
     auto img_src = nc::NdArray(image);
     for (auto i = 0; i < __classes.size(); ++i){
         for (auto c = 0;  c < __classes.size(); ++c){
             auto predictedClass = class_labels[c];
-            list<double> box;
+            vector<int> box;
             auto score = __scores[i];
             vector<double> boxColor;
             boxColor.push_back(class_colors[c]);
             box.push_back(__boxes[i]);
-            vector<tuple<int, int>> y_min_x_min;
-            vector<tuple<int, int>> y_max_x_max;
-            
+            int y_min, x_min, y_max, x_max;
+            y_min = box[i]; x_min = box[i + 1]; y_max = box[i + 2]; x_max = box[i + 3];
             cv::rectangle(cv::InputOutputArray(img_src), cv::Rect(x_min, y_min, x_max, y_max), cv::Scalar(*boxColor.data()), 1);
-
+            draw_line(img_src, x_min, y_min, x_max, y_max, _box_color);
+            cv::putText(cv::InputOutputArray(img_src), predictedClass, cv::Point(x_min, y_min - 5), cv::FONT_HERSHEY_SIMPLEX, 0.35, cv::Scalar(0.0,255.0,255.0), 1);
         }
     }
+    return img_src;
 }
 
 void display_process_time(){

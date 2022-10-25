@@ -9,7 +9,7 @@
 struct ABC{
     static vector<string> get_classes(string classes_path);
     static nc::NdArray<int> letterbox(nc::NdArray<int> image, tuple<int ,int> expected_size);
-    static nc::NdArray<int> draw_visual(nc::NdArray<double> image, nc::NdArray<double> __boxes, nc::NdArray<double> __sources,
+    static nc::NdArray<double> draw_visual(nc::NdArray<double> image, nc::NdArray<double> __boxes, nc::NdArray<double> __sources,
                         nc::NdArray<string> __classes, vector<string> class_labels, vector<double> class_colors);
     static nc::NdArray<double> preprocessInput(nc::NdArray<double> image);
 };
