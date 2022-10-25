@@ -1,7 +1,7 @@
 #include "../include/bbox.hpp"
 
 nc::NdArray<int> bboxes::yolo_correct_boxes(nc::NdArray<int>  box_xy, nc::NdArray<int>  box_wh, 
-                                vector<int> input_shape, vector<int> image_shape){
+                                vector<int> input_shape, nc::NdArray<int> image_shape){
     auto boxYX = box_xy(box_xy.rSlice(), nc::Slice(-1));
     auto boxHW = box_wh(box_wh.rSlice(), nc::Slice(-1));
     auto inputShape = nc::NdArray<int>(input_shape);
@@ -24,9 +24,9 @@ nc::NdArray<int> bboxes::yolo_correct_boxes(nc::NdArray<int>  box_xy, nc::NdArra
                                     boxMinis(boxMinis.rSlice(), nc::Slice(1, 2)),
                                     boxMaxes(boxMaxes.rSlice(), nc::Slice(0, 1)),
                                     boxMaxes(boxMaxes.rSlice(), nc::Slice(1, 2))};
-    auto boxes = nc::concatenate(listBoxPoints, -1);
-    list<nc::NdArray<int>> _imageShape = {imageShape, image_shape};
-    boxes *= nc::concatenate(_imageShape, -1);
+    auto boxes = nc::concatenate(listBoxPoints, nc::Axis(-1));
+    auto _imageShape = {imageShape, image_shape};
+    boxes *= nc::concatenate(_imageShape, nc::Axis(-1));
     return boxes;
 }
 
