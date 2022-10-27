@@ -1,8 +1,11 @@
 #pragma once
 #ifndef ARM_INCLUDES_HPP
 #define ARM_INCLUDES_HPP
-#include <armnn/ArmNN.hpp>
 #include <armnnOnnxParser/IOnnxParser.hpp>
+#include <armnn/ArmNN.hpp>
+#include <armnnUtils/TContainer.hpp>
+#include <armnnUtils/TensorIOUtils.hpp>
+#include <armnnUtils/HeapProfiling.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 #include <vector>
 #include <stdint.h>
@@ -16,6 +19,7 @@
 #include <iostream>
 #include <fstream>
 #include <NumCpp.hpp>
+#include <array>
 
 using std::vector;
 using std::list;

@@ -23,7 +23,7 @@ void setVaraibles(vector<void> inData, vector<vector<void>> outArray){
     }
 }
 
-nc::NdArray<int> ABC::letterbox(nc::NdArray<int> image, tuple<int ,int> expected_size){
+nc::NdArray<float> ABC::letterbox(nc::NdArray<float> image, tuple<int ,int> expected_size){
     auto [ih, iw] = image.shape();
     auto [eh, ew] = expected_size;
     auto scale = std::min(eh / iw, ew / iw);
@@ -31,13 +31,13 @@ nc::NdArray<int> ABC::letterbox(nc::NdArray<int> image, tuple<int ,int> expected
     auto nw = int(iw * scale);
 
     cv::resize(*(cv::_InputArray*)&image, *(cv::_OutputArray*)&image, cv::Size(nw, nh), 0.0, 0.0, cv::INTER_CUBIC);
-    auto newImage = nc::full(nc::Shape(eh, ew), 128);
+    nc::NdArray<float> newImage = nc::full(nc::Shape(eh, ew), (float)128.0);
     
     return newImage;
 }
 
-nc::NdArray<double> draw_line(nc::NdArray<double> image, int x, int y, int x1, int y1, 
-                    list<double> color, int l, int t){
+nc::NdArray<float> draw_line(nc::NdArray<float> image, int x, int y, int x1, int y1, 
+                    vector<float> color, int l, int t){
     cv::line((cv::InputOutputArray)image, cv::Point(x, y), cv::Point(x + l, y), cv::Scalar_(color), t);
     cv::line((cv::InputOutputArray)image, cv::Point(x, y), cv::Point(x, y + l), cv::Scalar_(color), t);
     cv::line((cv::InputOutputArray)image, cv::Point(x1, y), cv::Point(x1 - l, y), cv::Scalar_(color), t);
@@ -49,8 +49,8 @@ nc::NdArray<double> draw_line(nc::NdArray<double> image, int x, int y, int x1, i
     return image;
 }
 
-nc::NdArray<double> ABC::draw_visual(nc::NdArray<double> image, nc::NdArray<double> __boxes, nc::NdArray<double> __scores,
-                        nc::NdArray<string> __classes, vector<string> class_labels, vector<double> class_colors){
+nc::NdArray<float> ABC::draw_visual(nc::NdArray<float> image, nc::NdArray<float> __boxes, nc::NdArray<float> __scores,
+                        nc::NdArray<float> __classes, vector<string> class_labels, vector<float> class_colors){
     list<double> _box_color = {255., 0., 0.};
     auto img_src = nc::NdArray(image);
     for (auto i = 0; i < __classes.size(); ++i){
@@ -58,13 +58,13 @@ nc::NdArray<double> ABC::draw_visual(nc::NdArray<double> image, nc::NdArray<doub
             auto predictedClass = class_labels[c];
             vector<int> box;
             auto score = __scores[i];
-            vector<double> boxColor;
+            vector<float> boxColor;
             boxColor.push_back(class_colors[c]);
             box.push_back(__boxes[i]);
             int y_min, x_min, y_max, x_max;
             y_min = box[i]; x_min = box[i + 1]; y_max = box[i + 2]; x_max = box[i + 3];
             cv::rectangle(cv::InputOutputArray(img_src), cv::Rect(x_min, y_min, x_max, y_max), cv::Scalar(*boxColor.data()), 1);
-            draw_line(img_src, x_min, y_min, x_max, y_max, _box_color);
+            draw_line(img_src, x_min, y_min, x_max, y_max, boxColor);
             cv::putText(cv::InputOutputArray(img_src), predictedClass, cv::Point(x_min, y_min - 5), cv::FONT_HERSHEY_SIMPLEX, 0.35, cv::Scalar(0.0,255.0,255.0), 1);
         }
     }
@@ -87,45 +87,60 @@ void display_process_time(){
     printf("Result: %.20f\n", sum);
 }
 
-nc::NdArray<double> ABC::preprocessInput(nc::NdArray<double> image){
+nc::NdArray<float> ABC::preprocessInput(nc::NdArray<float> image){
     for (int i : image){
         image[i] = image[i] / 255.0;
     }
     return image;
 }
 
-map<string, vector<vector<void>>> TRTModule::trtInference(vector<vector<void>> intpuData, vector<vector<void>> imgz){
-    
+nc::NdArray<float> TRTModule::trtInference(nc::NdArray<float> intpuData, nc::NdArray<float> imgz, int TRT_INTERFERENCE){
+    switch(TRT_INTERFERENCE){
+        case(boxes):
+        break;
+        case(scores):
+        break;
+        case(classes):
+        break;
+        default:
+        break;
+    }
 }
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     auto cap = cv::VideoCapture(videoSrc);
-    vector<cv::UMat> frame;
-    cap.read(frame);
-    int width = cap.get(cv::CAP_PROP_FRAME_WIDTH);
-    int height = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
+    nc::NdArray<float> frame;
+    cap.read(cv::_OutputArray(frame.toStlVector()));
+    auto width = cap.get(cv::CAP_PROP_FRAME_WIDTH);
+    auto height = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
     auto prevFrameTime = 0;
     auto fourcc = cv::VideoWriter::fourcc('M','J','P','G');
     auto out = cv::VideoWriter(outputPath, fourcc, fps, cv::Size(width, height));
 
     do{
-        if(!cap.read(frame))
+        if(!cap.read(cv::_OutputArray(frame.toStlVector())))
             break;
         auto output = extractImage(frame);
-        auto newFrameTime = std::get_time();
+        auto newFrameTime = *(int*)&std::chrono::system_clock::now();
         double FPS = 1 / (newFrameTime - prevFrameTime);
         prevFrameTime = newFrameTime;
-        cv::putText(frame, std::to_string(FPS), cv::Point(5, 30), cv::FONT_HERSHEY_SIMPLEX,
+        cv::putText(cv::_InputOutputArray(frame.toStlVector()), std::to_string(FPS), cv::Point(5, 30), cv::FONT_HERSHEY_SIMPLEX,
                     0.5, cv::Scalar(0.0, 255.0, 255.0), 1);
-        out.write(output);
+        out.write(cv::InputArray(output));
     }while(cap.isOpened());
     out.release();
 }
 
-vector<vector<void>> TRTModule::extractImage(auto img){
-    nc::NdArray<float> inputImageShape = nc::exp(nc::NdArray<float>(image.shape[0], image.shape[1]), 0);
-    auto imageData = letterbox(img, tuple<int, int>(imageShape[1], imageShape[0]));
-    imageData = imageData.transpose(preprocessInput(nc::NdArray(imageData)));
+nc::NdArray<float> TRTModule::extractImage(nc::NdArray<float> img){
+    nc::NdArray<float> inputImageShape = nc::NdArray<float>(static_cast<int>(img.shape().cols, img.shape().rows));
+    nc::NdArray<float> imageData = letterbox(img, tuple<float, float>(imageShape[1], imageShape[0]));
+    imageData = nc::transpose(preprocessInput(nc::NdArray(imageData)));
+    nc::NdArray<float> __boxes, __scores, __classes;
+    __boxes = trtInference(imageData, inputImageShape, boxes);
+    __scores = trtInference(imageData, inputImageShape, scores);
+    __classes = trtInference(imageData, inputImageShape, classes);
 
+    auto image = draw_visual(img, __boxes, __scores, __classes, classLabels, classColors);
+    return image;
 }
 
 void TRTModule::loadModelAndPredict(string pathModel){
@@ -137,14 +152,39 @@ void TRTModule::loadModelAndPredict(string pathModel){
     armnnOnnxParser::BindingPointInfo outputInfo = parser->GetNetworkOutputBindingInfo(outputName);
 
     const unsigned int outputNumElements = classLabels.size();
-    vector<auto> outputDataContainers = {vector<uint8_t>(outputNumElements)};
+    vector<armnnUtils::TContainer> outputDataContainers = {vector<uint8_t>(outputNumElements)};
     
+
+    armnn::IRuntime::CreationOptions options;
+    armnn::IRuntimePtr runtime = armnn::IRuntime::Create(options);
+    armnn::IOptimizedNetworkPtr optNet = armnn::Optimize(*network,
+                                                {armnn::Compute::CpuAcc, armnn::Compute::CpuRef},
+                                                runtime->GetDeviceSpec());
+    
+    armnn::NetworkId networkIdentifier;
+    runtime->LoadNetwork(networkIdentifier, std::move(optNet));
+
+    armnn::Status ret = runtime->EnqueueWorkload(networkIdentifier,
+      armnnUtils::MakeInputTensors(inputBindings, inputDataContainers),
+      armnnUtils::MakeOutputTensors(outputBindings, outputDataContainers));
+    
+    // vector<uint8_t> output = std::get<vector<uint8_t>>(outputDataContainers[0]);
+    // size_t labelInd = std::distance(output.begin(), std::max_element(output.begin(), output.end()));
+    // std::cout << "Prediction: ";
+    // std::cout << modelOutputLabels[labelInd] << std::endl;
 }
 
 TRTModule::TRTModule(string pathModel, string pathClasses){
-    this->bboxes = new bboxes;
+    box = new bboxes;
     imageShape = {640, 640};
+    classColors = {0.f, 0.f, 255.f};
     classLabels.push_back(*get_classes(pathClasses).data());
+    inputName += "conv2d_input";
+    outputName += "activation_5/Softmax";
+    inputTensorBatchSize = 32;
+    inputTensorDataLayout = armnn::DataLayout::NHWC; 
+    NormalizationParameters optParam;
+    inputDataContainers = {PrepareImageTensor<uint8_t>(inVideoName, (int)imageShape[0], (int)imageShape[1], optParam, inputTensorBatchSize, inputTensorDataLayout)};
     loadModelAndPredict(pathModel);
 }
 

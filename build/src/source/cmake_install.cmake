@@ -1,4 +1,4 @@
-# Install script for directory: /home/orangepi/ARMNN_testing/src/source
+# Install script for directory: /home/beerenbubblegum/Desktop/armnn-testing/ARMNN_testing/src/source
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

@@ -1,4 +1,4 @@
-# Install script for directory: /home/orangepi/ARMNN_testing
+# Install script for directory: /home/beerenbubblegum/Desktop/armnn-testing/ARMNN_testing
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -44,7 +44,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/orangepi/ARMNN_testing/build/src/cmake_install.cmake")
+  include("/home/beerenbubblegum/Desktop/armnn-testing/ARMNN_testing/build/src/cmake_install.cmake")
 
 endif()
 
@@ -56,5 +56,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/orangepi/ARMNN_testing/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/beerenbubblegum/Desktop/armnn-testing/ARMNN_testing/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

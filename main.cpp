@@ -2,7 +2,8 @@
 
 int main(int argc, char* argv[]){
 
-    
-
+    TRTModule* nn = new TRTModule("weights/yolox-tiny640.onnx", "classes.txt");
+    nn->startNN(argv[1], argv[2], 35);
+    display_process_time();
     return 0;
 }
