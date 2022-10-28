@@ -10,7 +10,7 @@ nc::NdArray<int> bboxes::yolo_correct_boxes(nc::NdArray<int>  box_xy, nc::NdArra
     nc::NdArray<int> offset;
     nc::NdArray<int> scale;
 
-    for (auto i : inputShape){
+    for (int i : inputShape){
         offset[i] = (inputShape[i] - newShape[i]) / 2. / inputShape[i];
         scale[i] = inputShape[i] / newShape[i];
     }
