@@ -8,8 +8,8 @@ public:
     bboxes();
     virtual ~bboxes();
     
-    static nc::NdArray<int>  yolo_correct_boxes(nc::NdArray<int>  box_xy, nc::NdArray<int>  box_wh, 
-                                vector<int> input_shape, nc::NdArray<int> image_shape);
+    static nc::NdArray<float>  yolo_correct_boxes(nc::NdArray<float>  box_xy, nc::NdArray<float>  box_wh, 
+                                vector<float> input_shape, nc::NdArray<float> image_shape);
     list<nc::NdArray<float>> preprocess(nc::NdArray<int> output, tuple<int, int> image_data, tuple<int, int> image_shape);
 
 };

@@ -1,25 +1,25 @@
 #include "../include/bbox.hpp"
 
-nc::NdArray<int> bboxes::yolo_correct_boxes(nc::NdArray<int>  box_xy, nc::NdArray<int>  box_wh, 
-                                vector<int> input_shape, nc::NdArray<int> image_shape){
+nc::NdArray<float> bboxes::yolo_correct_boxes(nc::NdArray<float>  box_xy, nc::NdArray<float>  box_wh, 
+                                vector<float> input_shape, nc::NdArray<float> image_shape){
     auto boxYX = box_xy(box_xy.rSlice(), nc::Slice(-1));
     auto boxHW = box_wh(box_wh.rSlice(), nc::Slice(-1));
-    auto inputShape = nc::NdArray<int>(input_shape);
-    auto imageShape = nc::NdArray<int>(image_shape);
+    auto inputShape = nc::NdArray<float>(input_shape);
+    auto imageShape = nc::NdArray<float>(image_shape);
     auto newShape = nc::round(imageShape * nc::min(inputShape / imageShape));
-    nc::NdArray<int> offset;
-    nc::NdArray<int> scale;
+    nc::NdArray<float> offset;
+    nc::NdArray<float> scale;
 
     for (int i : inputShape){
-        offset[i] = (inputShape[i] - newShape[i]) / 2. / inputShape[i];
+        offset[i] = (inputShape[i] - newShape[i]) / 2.f / inputShape[i];
         scale[i] = inputShape[i] / newShape[i];
     }
 
     boxYX = (box_xy - offset) * scale;
     boxHW *= scale;
 
-    auto boxMinis = boxYX - (boxHW / 2);
-    auto boxMaxes = boxYX + (boxHW / 2);
+    auto boxMinis = boxYX - (boxHW / 2.f);
+    auto boxMaxes = boxYX + (boxHW / 2.f);
     auto listBoxPoints = {boxMinis(boxMinis.rSlice(), nc::Slice(0, 1)), 
                                     boxMinis(boxMinis.rSlice(), nc::Slice(1, 2)),
                                     boxMaxes(boxMaxes.rSlice(), nc::Slice(0, 1)),
