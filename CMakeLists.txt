@@ -9,7 +9,7 @@ add_compile_options(
     -Werror
     -Wall
     -Wextra
-    -Wpedantic
+    #-Wpedantic
 
     #-Wcast-align
     #-Wcast-qual

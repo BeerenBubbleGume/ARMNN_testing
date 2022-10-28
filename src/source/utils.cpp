@@ -53,8 +53,8 @@ nc::NdArray<float> ABC::draw_visual(nc::NdArray<float> image, nc::NdArray<float>
                         nc::NdArray<float> __classes, vector<string> class_labels, vector<float> class_colors){
     list<double> _box_color = {255., 0., 0.};
     auto img_src = nc::NdArray(image);
-    for (auto i = 0; i < __classes.size(); ++i){
-        for (auto c = 0;  c < __classes.size(); ++c){
+    for (auto i = 0; i < static_cast<int>(__classes.size()); ++i){
+        for (auto c = 0;  c < static_cast<int>(__classes.size()); ++c){
             auto predictedClass = class_labels[c];
             vector<int> box;
             auto score = __scores[i];
