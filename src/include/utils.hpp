@@ -19,8 +19,6 @@ nc::NdArray<float> draw_line(nc::NdArray<float> image, int x, int y, int x1, int
 
 void display_process_time();
 
-void setVaraibles(vector<void> inData, vector<void> outArray);
-
 enum TRT_INTERFERENCE{
     boxes,
     scores,

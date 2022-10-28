@@ -15,14 +15,6 @@ vector<string> ABC::get_classes(string classes_path){
     return classes_names;
 }
 
-void setVaraibles(vector<void> inData, vector<vector<void>> outArray){
-    if(!inData.empty()){
-        for (auto i : inData){
-            memcpy(&outArray, i, sizeof(i));
-        }
-    }
-}
-
 nc::NdArray<float> ABC::letterbox(nc::NdArray<float> image, tuple<int ,int> expected_size){
     auto [ih, iw] = image.shape();
     auto [eh, ew] = expected_size;
