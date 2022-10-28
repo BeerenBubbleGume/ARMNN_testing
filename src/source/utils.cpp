@@ -104,7 +104,7 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
         if(!cap.read(cv::_OutputArray(frame.toStlVector())))
             break;
         auto output = extractImage(frame);
-        auto newFrameTime = *(int*)&std::chrono::system_clock::now();
+        auto newFrameTime = reinterpret_cast<int>(&std::chrono::system_clock::now());
         double FPS = 1 / (newFrameTime - prevFrameTime);
         prevFrameTime = newFrameTime;
         cv::putText(cv::_InputOutputArray(frame.toStlVector()), std::to_string(FPS), cv::Point(5, 30), cv::FONT_HERSHEY_SIMPLEX,
