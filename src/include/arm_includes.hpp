@@ -5,7 +5,7 @@
 #include <armnn/ArmNN.hpp>
 #include <armnnUtils/TContainer.hpp>
 #include <armnnUtils/TensorIOUtils.hpp>
-#include <armnnUtils/HeapProfiling.hpp>
+//#include <armnnUtils/HeapProfiling.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 #include <vector>
 #include <stdint.h>
