@@ -11,14 +11,14 @@ add_compile_options(
     -Wextra
     -Wpedantic
 
-    -Wcast-align
-    -Wcast-qual
-    -Wconversion
-    -Wenum-compare
-    -Wfloat-equal
-    -Wnon-virtual-dtor
-    -Wold-style-cast
-    -Woverloaded-virtual
+    #-Wcast-align
+    #-Wcast-qual
+    #-Wconversion
+    #-Wenum-compare
+    #-Wfloat-equal
+    #-Wnon-virtual-dtor
+    #-Wold-style-cast
+    #-Woverloaded-virtual
 )
 
 add_executable(ARMNN_test   "main.cpp"
