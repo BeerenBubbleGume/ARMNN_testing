@@ -94,17 +94,9 @@ nc::NdArray<float> ABC::preprocessInput(nc::NdArray<float> image){
     return image;
 }
 
-nc::NdArray<float> TRTModule::trtInference(nc::NdArray<float> intpuData, nc::NdArray<float> imgz, int TRT_INTERFERENCE){
-    switch(TRT_INTERFERENCE){
-        case(boxes):
-        break;
-        case(scores):
-        break;
-        case(classes):
-        break;
-        default:
-        break;
-    }
+tuple<nc::NdArray<float>, nc::NdArray<float>, nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData, nc::NdArray<float> imgz){
+    //auto ortInputs = {inputBindings[0], inputData[nullptr, inputData.rSlice(), inputData.rSlice(), inputData.rSlice()]};
+    
 }
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     auto cap = cv::VideoCapture(videoSrc);
@@ -135,40 +127,36 @@ nc::NdArray<float> TRTModule::extractImage(nc::NdArray<float> img){
     nc::NdArray<float> imageData = letterbox(img, tuple<float, float>(imageShape[1], imageShape[0]));
     imageData = nc::transpose(preprocessInput(nc::NdArray(imageData)));
     nc::NdArray<float> __boxes, __scores, __classes;
-    __boxes = trtInference(imageData, inputImageShape, boxes);
-    __scores = trtInference(imageData, inputImageShape, scores);
-    __classes = trtInference(imageData, inputImageShape, classes);
+
+    
 
     auto image = draw_visual(img, __boxes, __scores, __classes, classLabels, classColors);
     return image;
 }
 
 void TRTModule::loadModelAndPredict(string pathModel){
-    armnnOnnxParser::IOnnxParserPtr parser = armnnOnnxParser::IOnnxParser::Create();
-    armnn::INetworkPtr network = parser->CreateNetworkFromBinaryFile(pathModel.c_str());
+    parser = &armnnOnnxParser::IOnnxParser::Create();
+    network = &parser->get()->CreateNetworkFromBinaryFile(pathModel.c_str());
     
     const size_t subgraphId = 0;
-    armnnOnnxParser::BindingPointInfo inputInfo = parser->GetNetworkInputBindingInfo(inputName);
-    armnnOnnxParser::BindingPointInfo outputInfo = parser->GetNetworkOutputBindingInfo(outputName);
+    armnnOnnxParser::BindingPointInfo inputInfo = parser->get()->GetNetworkInputBindingInfo(inputName);
+    armnnOnnxParser::BindingPointInfo outputInfo = parser->get()->GetNetworkOutputBindingInfo(outputName);
 
     const unsigned int outputNumElements = classLabels.size();
     vector<armnnUtils::TContainer> outputDataContainers = {vector<uint8_t>(outputNumElements)};
-    
 
     armnn::IRuntime::CreationOptions options;
-    armnn::IRuntimePtr runtime = armnn::IRuntime::Create(options);
-    armnn::IOptimizedNetworkPtr optNet = armnn::Optimize(*network,
-                                                {armnn::Compute::CpuAcc, armnn::Compute::CpuRef},
-                                                runtime->GetDeviceSpec());
+    runtime = &armnn::IRuntime::Create(options);
+    optNet = &armnn::Optimize(*(*network), {armnn::Compute::CpuAcc, armnn::Compute::CpuRef}, runtime->get()->GetDeviceSpec());
     
     armnn::NetworkId networkIdentifier;
-    runtime->LoadNetwork(networkIdentifier, std::move(optNet));
+    runtime->get()->LoadNetwork(networkIdentifier, std::move(*optNet));
     
-    armnn::Status ret = runtime->EnqueueWorkload(networkIdentifier,
+    armnn::Status ret = runtime->get()->EnqueueWorkload(networkIdentifier,
       armnnUtils::MakeInputTensors(inputBindings, inputDataContainers),
       armnnUtils::MakeOutputTensors(outputBindings, outputDataContainers));
     
-    // vector<uint8_t> output = std::get<vector<uint8_t>>(outputDataContainers[0]);
+    //vector<uint8_t> output = std::get<vector<uint8_t>>(outputDataContainers[0]);
     // size_t labelInd = std::distance(output.begin(), std::max_element(output.begin(), output.end()));
     // std::cout << "Prediction: ";
     // std::cout << modelOutputLabels[labelInd] << std::endl;
