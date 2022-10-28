@@ -9,6 +9,7 @@ add_compile_options(
     -Werror
     -Wall
     -Wextra
+    -std=gnu++20
     #-Wpedantic
 
     #-Wcast-align
