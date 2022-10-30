@@ -127,8 +127,8 @@ nc::NdArray<float> TRTModule::extractImage(nc::NdArray<float> img){
 }
 
 void TRTModule::loadModelAndPredict(string pathModel){
-    parser = &armnnOnnxParser::IOnnxParser::Create();
-    network = &parser->get()->CreateNetworkFromBinaryFile(pathModel.c_str());
+    parser = &createParser();
+    network = &createNetworkPtr(pathModel, parser);
     
     const size_t subgraphId = 0;
     armnnOnnxParser::BindingPointInfo inputInfo = parser->get()->GetNetworkInputBindingInfo(inputName);
@@ -138,8 +138,8 @@ void TRTModule::loadModelAndPredict(string pathModel){
     vector<armnnUtils::TContainer> outputDataContainers = {vector<uint8_t>(outputNumElements)};
 
     armnn::IRuntime::CreationOptions options;
-    runtime = &armnn::IRuntime::Create(options);
-    optNet = &armnn::Optimize(*(*network), {armnn::Compute::CpuAcc, armnn::Compute::CpuRef}, runtime->get()->GetDeviceSpec());
+    runtime = &createRuntime(options);
+    optNet = &optimaze(*network, *runtime);
     
     armnn::NetworkId networkIdentifier;
     runtime->get()->LoadNetwork(networkIdentifier, std::move(*optNet));

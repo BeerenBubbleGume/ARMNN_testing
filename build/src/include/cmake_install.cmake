@@ -1,4 +1,4 @@
-# Install script for directory: /home/beerenbubblegum/Desktop/armnn-testing/ARMNN_testing/src/include
+# Install script for directory: /home/beerenbubblegum/Desktop/ARMNN_testing/src/include
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
