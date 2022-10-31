@@ -3,7 +3,7 @@
 // Copyright © 2017 Arm Ltd. All rights reserved.
 // SPDX-License-Identifier: MIT
 //
-#ifnden VERIFICATIONHELPERS_HPP
+#ifndef VERIFICATIONHELPERS_HPP
 #define VERIFICATIONHELPERS_HPP
 #include "arm_includes.hpp"
 
