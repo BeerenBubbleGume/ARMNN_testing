@@ -1,4 +1,6 @@
 #pragma once
+#ifndef IMAGETENSORGENERATOR_HPP
+#define IMAGETENSORGENERATOR_HPP
 #include "InferanceImage.hpp"
 
 // Parameters used in normalizing images
@@ -195,3 +197,4 @@ void WriteImageTensorImpl<int8_t>(const vector<int8_t>& imageData, ofstream& ima
 {
     std::copy(imageData.begin(), imageData.end(), std::ostream_iterator<int>(imageTensorFile, " "));
 }
+#endif
