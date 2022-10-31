@@ -41,6 +41,8 @@ add_subdirectory("src")
 #target_include_directories(ARMNN_test /usr/include)
 find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui)
 target_link_libraries(ARMNN_test
+                        protobuf
+                        fmt
                         armnn
                         armnnOnnxParser
                         armnnUtils
