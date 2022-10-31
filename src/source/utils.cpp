@@ -127,9 +127,12 @@ nc::NdArray<float> TRTModule::extractImage(nc::NdArray<float> img){
 }
 
 void TRTModule::loadModelAndPredict(string pathModel){
-    this->parser = &createParser();
-    network = &createNetworkPtr(pathModel, *(*(this->parser)));
+    armnnOnnxParser::IOnnxParserPtr __parser = armnnOnnxParser::IOnnxParser::Create();
+    armnn::INetworkPtr __network = __parser->CreateNetworkFromBinaryFile(pathModel.c_str());
     
+    parser = &__parser;
+    network = &__network;
+
     const size_t subgraphId = 0;
     armnnOnnxParser::BindingPointInfo inputInfo = parser->get()->GetNetworkInputBindingInfo(inputName);
     armnnOnnxParser::BindingPointInfo outputInfo = parser->get()->GetNetworkOutputBindingInfo(outputName);
@@ -138,9 +141,12 @@ void TRTModule::loadModelAndPredict(string pathModel){
     vector<armnnUtils::TContainer> outputDataContainers = {vector<uint8_t>(outputNumElements)};
 
     armnn::IRuntime::CreationOptions options;
-    runtime = &createRuntime(options);
-    optNet = &optimize(*(*network), *(*runtime));
+    armnn::IRuntimePtr __runtime = armnn::IRuntime::Create(options);
+    armnn::IOptimizedNetworkPtr __optNet = armnn::Optimize(*__network, {armnn::Compute::CpuAcc, armnn::Compute::CpuRef}, __runtime->GetDeviceSpec());
     
+    runtime = &__runtime;
+    optNet = &__optNet;
+
     armnn::NetworkId networkIdentifier;
     runtime->get()->LoadNetwork(networkIdentifier, std::move(*optNet));
     
