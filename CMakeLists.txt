@@ -6,7 +6,7 @@ set(CMAKE_C_COMPILER "gcc-11.2.0")
 set(CMAKE_CXX_COMPILER "/usr/bin/g++-11")
 
 add_compile_options(
-    -Werror
+    #-Werror
     -Wall
     -Wextra
     -std=gnu++20
