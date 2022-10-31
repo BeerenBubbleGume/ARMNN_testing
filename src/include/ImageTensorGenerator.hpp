@@ -76,7 +76,7 @@ vector<ElemType> PrepareImageTensor(const string& imagePath,
 
 // Prepare float32 image tensor
 template <>
-inline  vector<float> PrepareImageTensor<float>(const string& imagePath,
+vector<float> PrepareImageTensor<float>(const string& imagePath,
                                              unsigned int newWidth,
                                              unsigned int newHeight,
                                              const NormalizationParameters& normParams,
@@ -113,7 +113,7 @@ inline  vector<float> PrepareImageTensor<float>(const string& imagePath,
 
 // Prepare int32 image tensor
 template <>
-inline vector<int> PrepareImageTensor<int>(const string& imagePath,
+vector<int> PrepareImageTensor<int>(const string& imagePath,
                                          unsigned int newWidth,
                                          unsigned int newHeight,
                                          const NormalizationParameters& normParams,
@@ -133,7 +133,7 @@ inline vector<int> PrepareImageTensor<int>(const string& imagePath,
 
 // Prepare qasymmu8 image tensor
 template <>
-inline vector<uint8_t> PrepareImageTensor<uint8_t>(const string& imagePath,
+vector<uint8_t> PrepareImageTensor<uint8_t>(const string& imagePath,
                                                  unsigned int newWidth,
                                                  unsigned int newHeight,
                                                  const NormalizationParameters& normParams,
@@ -153,7 +153,7 @@ inline vector<uint8_t> PrepareImageTensor<uint8_t>(const string& imagePath,
 
 // Prepare qasymms8 image tensor
 template <>
-inline vector<int8_t> PrepareImageTensor<int8_t>(const string& imagePath,
+vector<int8_t> PrepareImageTensor<int8_t>(const string& imagePath,
                                                unsigned int newWidth,
                                                unsigned int newHeight,
                                                const NormalizationParameters& normParams,
@@ -185,7 +185,7 @@ void WriteImageTensorImpl(const vector<ElemType>& imageData, ofstream& imageTens
 // For uint8_t image tensor, cast it to int before writing it to prevent writing data as characters instead of
 // numerical values
 template <>
-inline void WriteImageTensorImpl<uint8_t>(const vector<uint8_t>& imageData, ofstream& imageTensorFile)
+void WriteImageTensorImpl<uint8_t>(const vector<uint8_t>& imageData, ofstream& imageTensorFile)
 {
     std::copy(imageData.begin(), imageData.end(), std::ostream_iterator<int>(imageTensorFile, " "));
 }
@@ -193,7 +193,7 @@ inline void WriteImageTensorImpl<uint8_t>(const vector<uint8_t>& imageData, ofst
 // For int8_t image tensor, cast it to int before writing it to prevent writing data as characters instead of
 // numerical values
 template <>
-inline void WriteImageTensorImpl<int8_t>(const vector<int8_t>& imageData, ofstream& imageTensorFile)
+void WriteImageTensorImpl<int8_t>(const vector<int8_t>& imageData, ofstream& imageTensorFile)
 {
     std::copy(imageData.begin(), imageData.end(), std::ostream_iterator<int>(imageTensorFile, " "));
 }
