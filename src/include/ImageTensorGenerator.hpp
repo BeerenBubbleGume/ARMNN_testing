@@ -23,7 +23,7 @@ enum class SupportedFrontend
  * @param[in] modelFormat   One of the supported frontends
  * @param[in] outputType    Output type of the image tensor, also the type of the intended model
  */
-NormalizationParameters GetNormalizationParameters(const SupportedFrontend& modelFormat,
+inline NormalizationParameters GetNormalizationParameters(const SupportedFrontend& modelFormat,
                                                    const armnn::DataType& outputType)
 {
     NormalizationParameters normParams;
