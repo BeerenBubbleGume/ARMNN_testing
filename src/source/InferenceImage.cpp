@@ -8,10 +8,6 @@
 #include <armnn/utility/IgnoreUnused.hpp>
 #include <armnn/utility/NumericCast.hpp>
 
-#include <fmt/format.h>
-
-#include <array>
-
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 

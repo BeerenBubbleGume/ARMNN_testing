@@ -23,7 +23,7 @@ enum class SupportedFrontend
  * @param[in] modelFormat   One of the supported frontends
  * @param[in] outputType    Output type of the image tensor, also the type of the intended model
  */
-inline NormalizationParameters GetNormalizationParameters(const SupportedFrontend& modelFormat,
+NormalizationParameters GetNormalizationParameters(const SupportedFrontend& modelFormat,
                                                    const armnn::DataType& outputType)
 {
     NormalizationParameters normParams;
@@ -67,7 +67,7 @@ inline NormalizationParameters GetNormalizationParameters(const SupportedFronten
  * @param[in] outputLayout  Data layout of the output image tensor
  */
 template <typename ElemType>
-inline vector<ElemType> PrepareImageTensor(const string& imagePath,
+vector<ElemType> PrepareImageTensor(const string& imagePath,
                                          unsigned int newWidth,
                                          unsigned int newHeight,
                                          const NormalizationParameters& normParams,
@@ -177,7 +177,7 @@ inline vector<int8_t> PrepareImageTensor<int8_t>(const string& imagePath,
  * @param[in] imageTensorFile   Output filestream (ofstream) to which the image tensor data is written
  */
 template <typename ElemType>
-inline void WriteImageTensorImpl(const vector<ElemType>& imageData, ofstream& imageTensorFile)
+void WriteImageTensorImpl(const vector<ElemType>& imageData, ofstream& imageTensorFile)
 {
     std::copy(imageData.begin(), imageData.end(), std::ostream_iterator<ElemType>(imageTensorFile, " "));
 }
