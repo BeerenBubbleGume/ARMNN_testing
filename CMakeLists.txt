@@ -42,9 +42,9 @@ add_subdirectory("src")
 #find_library(BOOST)
 target_link_libraries(ARMNN_test
                         armnn
+                        armnnOnnxParser
+                        armnnUtils
                         timelineDecoderJson
                         timelineDecoder
                         armnnBasePipeServer
-                        opencv4
-                        NumCpp
-                        boost)
+                        opencv*)
