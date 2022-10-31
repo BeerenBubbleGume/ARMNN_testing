@@ -4,13 +4,8 @@
 //
 #pragma once
 
-#include <armnn/Exceptions.hpp>
+#include "arm_includes.hpp"
 #include "VerificationHelpers.hpp"
-
-#include <array>
-#include <cstdint>
-#include <vector>
-#include <utility>
 
 class InferenceTestImageException : public armnn::Exception
 {
@@ -82,17 +77,17 @@ public:
     // Channels beyond the third are dropped. If the image provides less than 3 channels, the non-existent
     // channels of the pixel will be filled with 0. Channels are returned in RGB order (that is, the first element
     // of the tuple corresponds to the Red channel, whereas the last element is the Blue channel).
-    std::tuple<uint8_t, uint8_t, uint8_t> GetPixelAs3Channels(unsigned int x, unsigned int y) const;
+    tuple<uint8_t, uint8_t, uint8_t> GetPixelAs3Channels(unsigned int x, unsigned int y) const;
 
     void StbResize(InferenceTestImage& im, const unsigned int newWidth, const unsigned int newHeight);
 
 
-    std::vector<float> Resize(unsigned int newWidth,
+    vector<float> Resize(unsigned int newWidth,
                               unsigned int newHeight,
                               const armnn::CheckLocation& location,
                               const ResizingMethods meth = ResizingMethods::STB,
-                              const std::array<float, 3>& mean = {{0.0, 0.0, 0.0}},
-                              const std::array<float, 3>& stddev = {{1.0, 1.0, 1.0}},
+                              const array<float, 3>& mean = {{0.0, 0.0, 0.0}},
+                              const array<float, 3>& stddev = {{1.0, 1.0, 1.0}},
                               const float scale = 255.0f);
 
     void Write(WriteFormat format, const char* filePath) const;
@@ -100,10 +95,10 @@ public:
 private:
     static unsigned int GetSingleElementSizeInBytes()
     {
-        return sizeof(decltype(std::declval<InferenceTestImage>().m_Data[0]));
+        return sizeof(decltype(declval<InferenceTestImage>().m_Data[0]));
     }
 
-    std::vector<uint8_t> m_Data;
+    vector<uint8_t> m_Data;
     unsigned int m_Width;
     unsigned int m_Height;
     unsigned int m_NumChannels;
@@ -127,19 +122,19 @@ enum class ImageChannelLayout
 // Reads the contents of an inference test image as 3-channel pixels whose channel values have been normalized (scaled)
 // and now lie in the range [0,1]. Channel data is stored according to the ArmNN layout (CHW). The order in which
 // channels appear in the resulting vector is defined by the provided layout.
-std::vector<float> GetImageDataInArmNnLayoutAsNormalizedFloats(ImageChannelLayout layout,
+vector<float> GetImageDataInArmNnLayoutAsNormalizedFloats(ImageChannelLayout layout,
                                                                const InferenceTestImage& image);
 
 // Reads the contents of an inference test image as 3-channel pixels, whose value is the result of subtracting the mean
 // from the values in the original image. Channel data is stored according to the ArmNN layout (CHW). The order in
 // which channels appear in the resulting vector is defined by the provided layout. The order of the channels of the
 // provided mean should also match the given layout.
-std::vector<float> GetImageDataInArmNnLayoutAsFloatsSubtractingMean(ImageChannelLayout layout,
+vector<float> GetImageDataInArmNnLayoutAsFloatsSubtractingMean(ImageChannelLayout layout,
                                                                     const InferenceTestImage& image,
-                                                                    const std::array<float, 3>& mean);
+                                                                    const array<float, 3>& mean);
 
 // Reads the contents of an inference test image as 3-channel pixels and returns the image data as normalized float
 // values. The returned image stay in the original order (HWC) order. The C order may be changed according to the
 // supplied layout value.
-std::vector<float> GetImageDataAsNormalizedFloats(ImageChannelLayout layout,
+vector<float> GetImageDataAsNormalizedFloats(ImageChannelLayout layout,
                                                   const InferenceTestImage& image);

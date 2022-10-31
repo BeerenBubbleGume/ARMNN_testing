@@ -2,11 +2,7 @@
 // Copyright © 2017 Arm Ltd. All rights reserved.
 // SPDX-License-Identifier: MIT
 //
-
-#include <iostream>
-#include <sstream>
-
-#include <armnn/Exceptions.hpp>
+#include "arm_includes.hpp"
 
 namespace armnnUtils
 {

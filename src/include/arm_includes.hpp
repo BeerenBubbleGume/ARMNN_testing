@@ -5,21 +5,25 @@
 #include <armnn/ArmNN.hpp>
 #include <armnnUtils/TContainer.hpp>
 #include <armnnUtils/TensorIOUtils.hpp>
+#include <armnn/Exceptions.hpp>
 //#include <armnnUtils/HeapProfiling.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 #include <vector>
-#include <stdint.h>
+#include <sstream>
+#include <float.h>
+#include <time.h>
 #include <map>
 #include <list>
 #include <cmath>
 #include <string>
 #include <functional>
-#include <array>
 #include <tuple>
 #include <iostream>
 #include <fstream>
 #include <NumCpp.hpp>
 #include <array>
+#include <utility>
+#include <cstdint>
 
 using std::vector;
 using std::list;
