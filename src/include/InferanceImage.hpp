@@ -5,7 +5,6 @@
 #pragma once
 
 #include "arm_includes.hpp"
-#include "VerificationHelpers.hpp"
 
 class InferenceTestImageException : public armnn::Exception
 {
