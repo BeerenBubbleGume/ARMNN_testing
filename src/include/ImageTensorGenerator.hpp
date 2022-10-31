@@ -1,21 +1,12 @@
 #pragma once
 #include "InferanceImage.hpp"
-#include <armnn/TypesUtils.hpp>
-
-#include <armnnUtils/TContainer.hpp>
-#include <armnnUtils/Permute.hpp>
-
-#include <algorithm>
-#include <fstream>
-#include <iterator>
-#include <string>
 
 // Parameters used in normalizing images
 struct NormalizationParameters
 {
     float scale{ 1.0 };
-    std::array<float, 3> mean{ { 0.0, 0.0, 0.0 } };
-    std::array<float, 3> stddev{ { 1.0, 1.0, 1.0 } };
+    array<float, 3> mean{ { 0.0, 0.0, 0.0 } };
+    array<float, 3> stddev{ { 1.0, 1.0, 1.0 } };
 };
 
 enum class SupportedFrontend
@@ -74,7 +65,7 @@ NormalizationParameters GetNormalizationParameters(const SupportedFrontend& mode
  * @param[in] outputLayout  Data layout of the output image tensor
  */
 template <typename ElemType>
-std::vector<ElemType> PrepareImageTensor(const std::string& imagePath,
+vector<ElemType> PrepareImageTensor(const string& imagePath,
                                          unsigned int newWidth,
                                          unsigned int newHeight,
                                          const NormalizationParameters& normParams,
@@ -83,7 +74,7 @@ std::vector<ElemType> PrepareImageTensor(const std::string& imagePath,
 
 // Prepare float32 image tensor
 template <>
-std::vector<float> PrepareImageTensor<float>(const std::string& imagePath,
+vector<float> PrepareImageTensor<float>(const string& imagePath,
                                              unsigned int newWidth,
                                              unsigned int newHeight,
                                              const NormalizationParameters& normParams,
@@ -91,7 +82,7 @@ std::vector<float> PrepareImageTensor<float>(const std::string& imagePath,
                                              const armnn::DataLayout& outputLayout)
 {
     // Generate image tensor
-    std::vector<float> imageData;
+    vector<float> imageData;
     InferenceTestImage testImage(imagePath.c_str());
     if (newWidth == 0)
     {
@@ -111,7 +102,7 @@ std::vector<float> PrepareImageTensor<float>(const std::string& imagePath,
         // Convert to NCHW format
         const armnn::PermutationVector NHWCToArmNN = { 0, 2, 3, 1 };
         armnn::TensorShape dstShape({ batchSize, 3, newHeight, newWidth });
-        std::vector<float> tempImage(imageData.size());
+        vector<float> tempImage(imageData.size());
         armnnUtils::Permute(dstShape, NHWCToArmNN, imageData.data(), tempImage.data(), sizeof(float));
         imageData.swap(tempImage);
     }
@@ -120,7 +111,7 @@ std::vector<float> PrepareImageTensor<float>(const std::string& imagePath,
 
 // Prepare int32 image tensor
 template <>
-std::vector<int> PrepareImageTensor<int>(const std::string& imagePath,
+vector<int> PrepareImageTensor<int>(const string& imagePath,
                                          unsigned int newWidth,
                                          unsigned int newHeight,
                                          const NormalizationParameters& normParams,
@@ -128,19 +119,19 @@ std::vector<int> PrepareImageTensor<int>(const std::string& imagePath,
                                          const armnn::DataLayout& outputLayout)
 {
     // Get float32 image tensor
-    std::vector<float> imageDataFloat =
+    vector<float> imageDataFloat =
         PrepareImageTensor<float>(imagePath, newWidth, newHeight, normParams, batchSize, outputLayout);
     // Convert to int32 image tensor with static cast
-    std::vector<int> imageDataInt;
+    vector<int> imageDataInt;
     imageDataInt.reserve(imageDataFloat.size());
-    std::transform(imageDataFloat.begin(), imageDataFloat.end(), std::back_inserter(imageDataInt),
+    transform(imageDataFloat.begin(), imageDataFloat.end(), back_inserter(imageDataInt),
                    [](float val) { return static_cast<int>(val); });
     return imageDataInt;
 }
 
 // Prepare qasymmu8 image tensor
 template <>
-std::vector<uint8_t> PrepareImageTensor<uint8_t>(const std::string& imagePath,
+vector<uint8_t> PrepareImageTensor<uint8_t>(const string& imagePath,
                                                  unsigned int newWidth,
                                                  unsigned int newHeight,
                                                  const NormalizationParameters& normParams,
@@ -148,9 +139,9 @@ std::vector<uint8_t> PrepareImageTensor<uint8_t>(const std::string& imagePath,
                                                  const armnn::DataLayout& outputLayout)
 {
     // Get float32 image tensor
-    std::vector<float> imageDataFloat =
+    vector<float> imageDataFloat =
         PrepareImageTensor<float>(imagePath, newWidth, newHeight, normParams, batchSize, outputLayout);
-    std::vector<uint8_t> imageDataQasymm8;
+    vector<uint8_t> imageDataQasymm8;
     imageDataQasymm8.reserve(imageDataFloat.size());
     // Convert to uint8 image tensor with static cast
     std::transform(imageDataFloat.begin(), imageDataFloat.end(), std::back_inserter(imageDataQasymm8),
@@ -160,7 +151,7 @@ std::vector<uint8_t> PrepareImageTensor<uint8_t>(const std::string& imagePath,
 
 // Prepare qasymms8 image tensor
 template <>
-std::vector<int8_t> PrepareImageTensor<int8_t>(const std::string& imagePath,
+vector<int8_t> PrepareImageTensor<int8_t>(const string& imagePath,
                                                unsigned int newWidth,
                                                unsigned int newHeight,
                                                const NormalizationParameters& normParams,
@@ -168,9 +159,9 @@ std::vector<int8_t> PrepareImageTensor<int8_t>(const std::string& imagePath,
                                                const armnn::DataLayout& outputLayout)
 {
     // Get float32 image tensor
-    std::vector<float> imageDataFloat =
+    vector<float> imageDataFloat =
             PrepareImageTensor<float>(imagePath, newWidth, newHeight, normParams, batchSize, outputLayout);
-    std::vector<int8_t> imageDataQasymms8;
+    vector<int8_t> imageDataQasymms8;
     imageDataQasymms8.reserve(imageDataFloat.size());
     // Convert to uint8 image tensor with static cast
     std::transform(imageDataFloat.begin(), imageDataFloat.end(), std::back_inserter(imageDataQasymms8),
@@ -184,7 +175,7 @@ std::vector<int8_t> PrepareImageTensor<int8_t>(const std::string& imagePath,
  * @param[in] imageTensorFile   Output filestream (ofstream) to which the image tensor data is written
  */
 template <typename ElemType>
-void WriteImageTensorImpl(const std::vector<ElemType>& imageData, std::ofstream& imageTensorFile)
+void WriteImageTensorImpl(const vector<ElemType>& imageData, ofstream& imageTensorFile)
 {
     std::copy(imageData.begin(), imageData.end(), std::ostream_iterator<ElemType>(imageTensorFile, " "));
 }
@@ -192,7 +183,7 @@ void WriteImageTensorImpl(const std::vector<ElemType>& imageData, std::ofstream&
 // For uint8_t image tensor, cast it to int before writing it to prevent writing data as characters instead of
 // numerical values
 template <>
-void WriteImageTensorImpl<uint8_t>(const std::vector<uint8_t>& imageData, std::ofstream& imageTensorFile)
+void WriteImageTensorImpl<uint8_t>(const vector<uint8_t>& imageData, ofstream& imageTensorFile)
 {
     std::copy(imageData.begin(), imageData.end(), std::ostream_iterator<int>(imageTensorFile, " "));
 }
@@ -200,7 +191,7 @@ void WriteImageTensorImpl<uint8_t>(const std::vector<uint8_t>& imageData, std::o
 // For int8_t image tensor, cast it to int before writing it to prevent writing data as characters instead of
 // numerical values
 template <>
-void WriteImageTensorImpl<int8_t>(const std::vector<int8_t>& imageData, std::ofstream& imageTensorFile)
+void WriteImageTensorImpl<int8_t>(const vector<int8_t>& imageData, ofstream& imageTensorFile)
 {
     std::copy(imageData.begin(), imageData.end(), std::ostream_iterator<int>(imageTensorFile, " "));
 }
