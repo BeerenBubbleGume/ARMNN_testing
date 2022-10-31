@@ -30,14 +30,14 @@ nc::NdArray<float> ABC::letterbox(nc::NdArray<float> image, tuple<int ,int> expe
 
 nc::NdArray<float> draw_line(nc::NdArray<float> image, int x, int y, int x1, int y1, 
                     vector<float> color, int l, int t){
-    cv::line((cv::InputOutputArray)image, cv::Point(x, y), cv::Point(x + l, y), cv::Scalar_((double*)color.data()), t);
-    cv::line((cv::InputOutputArray)image, cv::Point(x, y), cv::Point(x, y + l), cv::Scalar_((double*)color.data()), t);
-    cv::line((cv::InputOutputArray)image, cv::Point(x1, y), cv::Point(x1 - l, y), cv::Scalar_((double*)color.data()), t);
-    cv::line((cv::InputOutputArray)image, cv::Point(x1, y), cv::Point(x1, y + l), cv::Scalar_((double*)color.data()), t);
-    cv::line((cv::InputOutputArray)image, cv::Point(x, y1), cv::Point(x + l, y1), cv::Scalar_((double*)color.data()), t);
-    cv::line((cv::InputOutputArray)image, cv::Point(x, y1), cv::Point(x, y1 - l), cv::Scalar_((double*)color.data()), t);
-    cv::line((cv::InputOutputArray)image, cv::Point(x1, y1), cv::Point(x1 - l, y1), cv::Scalar_((double*)color.data()), t);
-    cv::line((cv::InputOutputArray)image, cv::Point(x1, y1), cv::Point(x1, y1 - l), cv::Scalar_((double*)color.data()), t);
+    cv::line((cv::InputOutputArray)image, cv::Point(x, y), cv::Point(x + l, y), cv::Scalar_(color[0], color[1], color[3]), t);
+    cv::line((cv::InputOutputArray)image, cv::Point(x, y), cv::Point(x, y + l), cv::Scalar_(color[0], color[1], color[3]), t);
+    cv::line((cv::InputOutputArray)image, cv::Point(x1, y), cv::Point(x1 - l, y), cv::Scalar_(color[0], color[1], color[3]), t);
+    cv::line((cv::InputOutputArray)image, cv::Point(x1, y), cv::Point(x1, y + l), cv::Scalar_(color[0], color[1], color[3]), t);
+    cv::line((cv::InputOutputArray)image, cv::Point(x, y1), cv::Point(x + l, y1), cv::Scalar_(color[0], color[1], color[3]), t);
+    cv::line((cv::InputOutputArray)image, cv::Point(x, y1), cv::Point(x, y1 - l), cv::Scalar_(color[0], color[1], color[3]), t);
+    cv::line((cv::InputOutputArray)image, cv::Point(x1, y1), cv::Point(x1 - l, y1), cv::Scalar_(color[0], color[1], color[3]), t);
+    cv::line((cv::InputOutputArray)image, cv::Point(x1, y1), cv::Point(x1, y1 - l), cv::Scalar_(color[0], color[1], color[3]), t);
     return image;
 }
 
