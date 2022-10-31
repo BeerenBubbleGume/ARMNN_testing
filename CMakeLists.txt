@@ -12,13 +12,13 @@ add_compile_options(
     -std=gnu++20
     -Wpedantic
 
-    -Wcast-align
-    -Wcast-qual
-    -Wconversion
-    -Wenum-compare
-    -Wfloat-equal
+    #-Wcast-align
+    #-Wcast-qual
+    #-Wconversion
+    #-Wenum-compare
+    #-Wfloat-equal
     -Wnon-virtual-dtor
-    -Wold-style-cast
+    #-Wold-style-cast
     -Woverloaded-virtual
 )
 

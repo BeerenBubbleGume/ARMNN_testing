@@ -30,14 +30,14 @@ nc::NdArray<float> ABC::letterbox(nc::NdArray<float> image, tuple<int ,int> expe
 
 nc::NdArray<float> draw_line(nc::NdArray<float> image, int x, int y, int x1, int y1, 
                     vector<float> color, int l, int t){
-    cv::line((cv::InputOutputArray)image, cv::Point(x, y), cv::Point(x + l, y), cv::Scalar_(color[0], color[1], color[3]), t);
-    cv::line((cv::InputOutputArray)image, cv::Point(x, y), cv::Point(x, y + l), cv::Scalar_(color[0], color[1], color[3]), t);
-    cv::line((cv::InputOutputArray)image, cv::Point(x1, y), cv::Point(x1 - l, y), cv::Scalar_(color[0], color[1], color[3]), t);
-    cv::line((cv::InputOutputArray)image, cv::Point(x1, y), cv::Point(x1, y + l), cv::Scalar_(color[0], color[1], color[3]), t);
-    cv::line((cv::InputOutputArray)image, cv::Point(x, y1), cv::Point(x + l, y1), cv::Scalar_(color[0], color[1], color[3]), t);
-    cv::line((cv::InputOutputArray)image, cv::Point(x, y1), cv::Point(x, y1 - l), cv::Scalar_(color[0], color[1], color[3]), t);
-    cv::line((cv::InputOutputArray)image, cv::Point(x1, y1), cv::Point(x1 - l, y1), cv::Scalar_(color[0], color[1], color[3]), t);
-    cv::line((cv::InputOutputArray)image, cv::Point(x1, y1), cv::Point(x1, y1 - l), cv::Scalar_(color[0], color[1], color[3]), t);
+    cv::line((cv::InputOutputArray)image, cv::Point(x, y), cv::Point(x + l, y), cv::Scalar_<float>(color[0], color[1], color[3]), t);
+    cv::line((cv::InputOutputArray)image, cv::Point(x, y), cv::Point(x, y + l), cv::Scalar_<float>(color[0], color[1], color[3]), t);
+    cv::line((cv::InputOutputArray)image, cv::Point(x1, y), cv::Point(x1 - l, y), cv::Scalar_<float>(color[0], color[1], color[3]), t);
+    cv::line((cv::InputOutputArray)image, cv::Point(x1, y), cv::Point(x1, y + l), cv::Scalar_<float>(color[0], color[1], color[3]), t);
+    cv::line((cv::InputOutputArray)image, cv::Point(x, y1), cv::Point(x + l, y1), cv::Scalar_<float>(color[0], color[1], color[3]), t);
+    cv::line((cv::InputOutputArray)image, cv::Point(x, y1), cv::Point(x, y1 - l), cv::Scalar_<float>(color[0], color[1], color[3]), t);
+    cv::line((cv::InputOutputArray)image, cv::Point(x1, y1), cv::Point(x1 - l, y1), cv::Scalar_<float>(color[0], color[1], color[3]), t);
+    cv::line((cv::InputOutputArray)image, cv::Point(x1, y1), cv::Point(x1, y1 - l), cv::Scalar_<float>(color[0], color[1], color[3]), t);
     return image;
 }
 
@@ -57,7 +57,8 @@ nc::NdArray<float> ABC::draw_visual(nc::NdArray<float> image, nc::NdArray<float>
             y_min = box[i]; x_min = box[i + 1]; y_max = box[i + 2]; x_max = box[i + 3];
             cv::rectangle(cv::InputOutputArray(img_src), cv::Rect(x_min, y_min, x_max, y_max), cv::Scalar(*boxColor.data()), 1);
             draw_line(img_src, x_min, y_min, x_max, y_max, boxColor);
-            cv::putText(cv::InputOutputArray(img_src), predictedClass, cv::Point(x_min, y_min - 5), cv::FONT_HERSHEY_SIMPLEX, 0.35, cv::Scalar(0.0,255.0,255.0), 1);
+            cv::putText(cv::InputOutputArray(img_src), predictedClass, cv::Point(x_min, y_min - 5), 
+                        cv::FONT_HERSHEY_SIMPLEX, 0.35, cv::Scalar(0.0,255.0,255.0), 1);
         }
     }
     return img_src;
