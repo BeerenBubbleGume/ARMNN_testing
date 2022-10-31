@@ -96,7 +96,7 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     cap.read(cv::_OutputArray(frame.toStlVector()));
     auto width = cap.get(cv::CAP_PROP_FRAME_WIDTH);
     auto height = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
-    auto prevFrameTime = 0;
+    std::chrono::duration<double> prevFrameTime = std::chrono::system_clock::now().time_since_epoch();
     auto fourcc = cv::VideoWriter::fourcc('M','J','P','G');
     auto out = cv::VideoWriter(outputPath, fourcc, fps, cv::Size(width, height));
 
@@ -104,8 +104,8 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
         if(!cap.read(cv::_OutputArray(frame.toStlVector())))
             break;
         auto output = extractImage(frame);
-        auto newFrameTime = reinterpret_cast<int>(&std::chrono::system_clock::now());
-        double FPS = 1 / (newFrameTime - prevFrameTime);
+        std::chrono::duration<double> newFrameTime = std::chrono::duration<double>(prevFrameTime);
+        double FPS = 1 / (newFrameTime.count() - prevFrameTime.count());
         prevFrameTime = newFrameTime;
         cv::putText(cv::_InputOutputArray(frame.toStlVector()), std::to_string(FPS), cv::Point(5, 30), cv::FONT_HERSHEY_SIMPLEX,
                     0.5, cv::Scalar(0.0, 255.0, 255.0), 1);
