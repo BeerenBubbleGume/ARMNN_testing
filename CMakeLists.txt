@@ -39,7 +39,7 @@ endif()
 add_subdirectory("src")
 
 #target_include_directories(ARMNN_test /usr/include)
-find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui)
+find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui video image)
 target_link_libraries(ARMNN_test
                         protobuf
                         fmt
