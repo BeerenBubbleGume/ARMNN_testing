@@ -6,20 +6,20 @@ set(CMAKE_C_COMPILER "gcc-11.2.0")
 set(CMAKE_CXX_COMPILER "/usr/bin/g++-11")
 
 add_compile_options(
-    #-Werror
-    #-Wall
-    #-Wextra
+    -Werror
+    -Wall
+    -Wextra
     -std=gnu++20
-    #-Wpedantic
+    -Wpedantic
 
-    #-Wcast-align
-    #-Wcast-qual
-    #-Wconversion
-    #-Wenum-compare
-    #-Wfloat-equal
-    #-Wnon-virtual-dtor
-    #-Wold-style-cast
-    #-Woverloaded-virtual
+    -Wcast-align
+    -Wcast-qual
+    -Wconversion
+    -Wenum-compare
+    -Wfloat-equal
+    -Wnon-virtual-dtor
+    -Wold-style-cast
+    -Woverloaded-virtual
 )
 
 add_executable(ARMNN_test   "main.cpp"
