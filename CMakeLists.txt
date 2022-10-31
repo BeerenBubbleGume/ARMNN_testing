@@ -62,6 +62,8 @@ target_link_libraries(ARMNN_test
                         armnn
                         armnnOnnxParser
                         armnnUtils
+                        armnnBasePipeServer
+                        armnnTestUtils
                         timelineDecoderJson
                         timelineDecoder
                         armnnBasePipeServer)
