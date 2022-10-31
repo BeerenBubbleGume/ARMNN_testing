@@ -67,7 +67,7 @@ NormalizationParameters GetNormalizationParameters(const SupportedFrontend& mode
  * @param[in] outputLayout  Data layout of the output image tensor
  */
 template <typename ElemType>
-vector<ElemType> PrepareImageTensor(const string& imagePath,
+inline vector<ElemType> PrepareImageTensor(const string& imagePath,
                                          unsigned int newWidth,
                                          unsigned int newHeight,
                                          const NormalizationParameters& normParams,
@@ -76,7 +76,7 @@ vector<ElemType> PrepareImageTensor(const string& imagePath,
 
 // Prepare float32 image tensor
 template <>
-vector<float> PrepareImageTensor<float>(const string& imagePath,
+inline  vector<float> PrepareImageTensor<float>(const string& imagePath,
                                              unsigned int newWidth,
                                              unsigned int newHeight,
                                              const NormalizationParameters& normParams,
@@ -113,7 +113,7 @@ vector<float> PrepareImageTensor<float>(const string& imagePath,
 
 // Prepare int32 image tensor
 template <>
-vector<int> PrepareImageTensor<int>(const string& imagePath,
+inline vector<int> PrepareImageTensor<int>(const string& imagePath,
                                          unsigned int newWidth,
                                          unsigned int newHeight,
                                          const NormalizationParameters& normParams,
@@ -133,7 +133,7 @@ vector<int> PrepareImageTensor<int>(const string& imagePath,
 
 // Prepare qasymmu8 image tensor
 template <>
-vector<uint8_t> PrepareImageTensor<uint8_t>(const string& imagePath,
+inline vector<uint8_t> PrepareImageTensor<uint8_t>(const string& imagePath,
                                                  unsigned int newWidth,
                                                  unsigned int newHeight,
                                                  const NormalizationParameters& normParams,
@@ -153,7 +153,7 @@ vector<uint8_t> PrepareImageTensor<uint8_t>(const string& imagePath,
 
 // Prepare qasymms8 image tensor
 template <>
-vector<int8_t> PrepareImageTensor<int8_t>(const string& imagePath,
+inline vector<int8_t> PrepareImageTensor<int8_t>(const string& imagePath,
                                                unsigned int newWidth,
                                                unsigned int newHeight,
                                                const NormalizationParameters& normParams,
@@ -177,7 +177,7 @@ vector<int8_t> PrepareImageTensor<int8_t>(const string& imagePath,
  * @param[in] imageTensorFile   Output filestream (ofstream) to which the image tensor data is written
  */
 template <typename ElemType>
-void WriteImageTensorImpl(const vector<ElemType>& imageData, ofstream& imageTensorFile)
+inline void WriteImageTensorImpl(const vector<ElemType>& imageData, ofstream& imageTensorFile)
 {
     std::copy(imageData.begin(), imageData.end(), std::ostream_iterator<ElemType>(imageTensorFile, " "));
 }
@@ -185,7 +185,7 @@ void WriteImageTensorImpl(const vector<ElemType>& imageData, ofstream& imageTens
 // For uint8_t image tensor, cast it to int before writing it to prevent writing data as characters instead of
 // numerical values
 template <>
-void WriteImageTensorImpl<uint8_t>(const vector<uint8_t>& imageData, ofstream& imageTensorFile)
+inline void WriteImageTensorImpl<uint8_t>(const vector<uint8_t>& imageData, ofstream& imageTensorFile)
 {
     std::copy(imageData.begin(), imageData.end(), std::ostream_iterator<int>(imageTensorFile, " "));
 }
@@ -193,7 +193,7 @@ void WriteImageTensorImpl<uint8_t>(const vector<uint8_t>& imageData, ofstream& i
 // For int8_t image tensor, cast it to int before writing it to prevent writing data as characters instead of
 // numerical values
 template <>
-void WriteImageTensorImpl<int8_t>(const vector<int8_t>& imageData, ofstream& imageTensorFile)
+inline void WriteImageTensorImpl<int8_t>(const vector<int8_t>& imageData, ofstream& imageTensorFile)
 {
     std::copy(imageData.begin(), imageData.end(), std::ostream_iterator<int>(imageTensorFile, " "));
 }
