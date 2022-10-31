@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 //
 
-#include "VerificationHelpers.hpp"
+#include "../include/VerificationHelpers.hpp"
 #include <armnn/Exceptions.hpp>
 
 #include <fmt/format.h>
