@@ -60,20 +60,20 @@ public:
     void startNN(string videoSrc, string outputPath, int fps);
 };
 
-armnnOnnxParser::IOnnxParser createParser(){
+armnnOnnxParser::IOnnxParserPtr createParser(){
     return armnnOnnxParser::IOnnxParser::Create();
 }
 
-armnn::INetworkPtr createNetworkPtr(string pathModel, armnnOnnxParser::IOnnrxParser parser){
-    return parser->reateNetworkFromBinaryFile(pathModel.c_str());
+armnn::INetworkPtr createNetworkPtr(string pathModel, armnnOnnxParser::IOnnxParser& parser){
+    return parser.CreateNetworkFromBinaryFile(pathModel.c_str());
 }
 
-armnn::IRuntime createRuntime(armnn::IRuntime::CreationOptions options){
+armnn::IRuntimePtr createRuntime(armnn::IRuntime::CreationOptions options){
     return armnn::IRuntime::Create(options);
 }
 
-armnn::Optimaze optimaze(armnn::INetwork network, armnn::IRuntime runtime){
-    return armnn::Optimize(network, {armnn::Compute::CpuAcc, armnn::Compute::CpuRef}, runtime->GetDeviceSpec());
+armnn::IOptimizedNetworkPtr optimize(const armnn::INetwork& network, const armnn::IRuntime& runtime){
+    return armnn::Optimize(network, {armnn::Compute::CpuAcc, armnn::Compute::CpuRef}, runtime.GetDeviceSpec());
 }
 
 #endif
