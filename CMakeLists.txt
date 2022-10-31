@@ -40,8 +40,23 @@ endif()
 add_subdirectory("src")
 
 #target_include_directories(ARMNN_test /usr/include)
-find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui video imgcodecs videoio features2d dnn gapi calib3d objdetect ml)
+#find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui video imgcodecs videoio features2d dnn gapi calib3d objdetect ml)
 target_link_libraries(ARMNN_test
+                        opencv_calib3d
+                        opencv_core
+                        opencv_dnn
+                        opencv_features2d
+                        opencv_flann
+                        opencv_gapi
+                        opencv_highgui
+                        opencv_imgcodecs
+                        opencv_imgproc
+                        opencv_ml
+                        opencv_objdetect
+                        opencv_photo
+                        opencv_stitching
+                        opencv_videoio
+                        opencv_video
                         protobuf
                         fmt
                         armnn
