@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.13)
 project(ARMNN_test VERSION 0.0 LANGUAGES CXX)
 
 set(CMAKE_C_COMPILER "gcc-11.2.0")
-set(CMAKE_CXX_COMPILER "/usr/bin/g++-11")
+set(CMAKE_CXX_COMPILER "g++-11.3.0")
 
 add_compile_options(
     #-Werror
