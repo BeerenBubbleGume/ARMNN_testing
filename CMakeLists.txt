@@ -29,7 +29,6 @@ add_executable(ARMNN_test   "main.cpp"
                             "src/source/VerificationHelpers.cpp"
                             #"src/include/arm_includes.hpp"
                             #"src/include/InferanceImage.hpp"
-                            
                             )
 
 set_property(TARGET ARMNN_test PROPERTY CXX_STANDARD 20)

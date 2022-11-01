@@ -9,6 +9,9 @@
 #include <iterator>
 #include <string>
 
+using std::string;
+using std::ofstream;
+
 // Parameters used in normalizing images
 struct NormalizationParameters
 {

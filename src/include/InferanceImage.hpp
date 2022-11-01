@@ -16,7 +16,6 @@
 using std::vector;
 using std::array;
 
-
 class InferenceTestImageException : public armnn::Exception
 {
 public:
@@ -87,7 +86,7 @@ public:
     // Channels beyond the third are dropped. If the image provides less than 3 channels, the non-existent
     // channels of the pixel will be filled with 0. Channels are returned in RGB order (that is, the first element
     // of the tuple corresponds to the Red channel, whereas the last element is the Blue channel).
-    tuple<uint8_t, uint8_t, uint8_t> GetPixelAs3Channels(unsigned int x, unsigned int y) const;
+    std::tuple<uint8_t, uint8_t, uint8_t> GetPixelAs3Channels(unsigned int x, unsigned int y) const;
 
     void StbResize(InferenceTestImage& im, const unsigned int newWidth, const unsigned int newHeight);
 
@@ -105,7 +104,7 @@ public:
 private:
     static unsigned int GetSingleElementSizeInBytes()
     {
-        return sizeof(decltype(declval<InferenceTestImage>().m_Data[0]));
+        return sizeof(decltype(std::declval<InferenceTestImage>().m_Data[0]));
     }
 
     vector<uint8_t> m_Data;

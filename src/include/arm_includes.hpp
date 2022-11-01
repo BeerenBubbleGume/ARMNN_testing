@@ -30,7 +30,6 @@
 
 using std::vector;
 using std::array;
-using std::declval;
 using std::list;
 using std::string;
 using std::function;
