@@ -24,8 +24,8 @@ add_compile_options(
 
 add_executable(ARMNN_test   "src/source/VerificationHelpers.cpp"
                             "src/include/arm_includes.hpp"
-                            "src/include/ImageTensorGenerator.hpp"
-                            "src/include/InferanceImage.hpp"
+                            #"src/include/ImageTensorGenerator.hpp"
+                            #"src/include/InferanceImage.hpp"
                             "src/source/bbox.cpp"
                             "src/source/utils.cpp"
                             "main.cpp"
