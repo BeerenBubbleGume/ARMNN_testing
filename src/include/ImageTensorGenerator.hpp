@@ -1,3 +1,4 @@
+#pragma once
 #include "InferanceImage.hpp"
 #include <armnn/TypesUtils.hpp>
 

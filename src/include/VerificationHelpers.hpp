@@ -1,3 +1,4 @@
+#pragma once
 //
 // Copyright © 2017 Arm Ltd. All rights reserved.
 // SPDX-License-Identifier: MIT

@@ -1,4 +1,3 @@
-#pragma once
 #ifndef ARM_INCLUDES_HPP
 #define ARM_INCLUDES_HPP
 #include <armnnOnnxParser/IOnnxParser.hpp>
