@@ -37,17 +37,15 @@ protected:
     armnn::IRuntime::CreationOptions options;
     armnn::IRuntimePtr* runtime;
     armnn::IOptimizedNetworkPtr* optNet;
-    void* networkIdentifierPtr;
+    armnn::NetworkId* networkIdentifier;
     vector<armnnUtils::TContainer> outputDataContainers;
     int inputTensorBatchSize;
     vector<float> classColors;
     int numNames;
-    vector<unsigned int> imageShape;
+    vector<float> imageShape;
     bboxes* box;
 
-    tuple<nc::NdArray<float>, 
-        nc::NdArray<float>, 
-        nc::NdArray<float>> trtInference(nc::NdArray<float> intpuData, nc::NdArray<float> imgz);
+    vector<nc::NdArray<float>> trtInference(nc::NdArray<float> intpuData, nc::NdArray<float> imgz);
     void loadModelAndPredict(string pathModel);
     virtual ~TRTModule();
     

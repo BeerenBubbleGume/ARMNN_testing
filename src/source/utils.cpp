@@ -87,9 +87,12 @@ nc::NdArray<float> ABC::preprocessInput(nc::NdArray<float> image){
     return image;
 }
 
-tuple<nc::NdArray<float>, nc::NdArray<float>, nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData, nc::NdArray<float> imgz){
-    //auto ortInputs = {inputBindings[0], inputData[nullptr, inputData.rSlice(), inputData.rSlice(), inputData.rSlice()]};
-    
+vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData, nc::NdArray<float> imgz){
+    nc::NdArray<float> ortInputs{inputData[inputData.none(), inputData.rSlice(), inputData.rSlice(), inputData.rSlice()]};
+    armnn::Status ret = runtime->get()->EnqueueWorkload(*networkIdentifier,
+      armnnUtils::MakeInputTensors(inputBindings, inputDataContainers),
+      armnnUtils::MakeOutputTensors(outputBindings, outputDataContainers));
+    box->preprocess(ortInputs, imageShape, imgz);
 }
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     auto cap = cv::VideoCapture(videoSrc);
@@ -119,11 +122,12 @@ nc::NdArray<float> TRTModule::extractImage(nc::NdArray<float> img){
     nc::NdArray<float> inputImageShape = nc::NdArray<float>(static_cast<int>(img.shape().cols, img.shape().rows));
     nc::NdArray<float> imageData = letterbox(img, tuple<float, float>(imageShape[1], imageShape[0]));
     imageData = nc::transpose(preprocessInput(nc::NdArray(imageData)));
-    nc::NdArray<float> __boxes, __scores, __classes;
+    vector<nc::NdArray<float>> __boxes__classes__scores(trtInference(imageData, inputImageShape));
 
-    
-
-    auto image = draw_visual(img, __boxes, __scores, __classes, classLabels, classColors);
+    auto image = draw_visual(img, __boxes__classes__scores[0], 
+                            __boxes__classes__scores[1], 
+                            __boxes__classes__scores[2], 
+                            classLabels, classColors);
     return image;
 }
 
@@ -139,9 +143,8 @@ void TRTModule::loadModelAndPredict(string pathModel){
     armnnOnnxParser::BindingPointInfo outputInfo = parser->get()->GetNetworkOutputBindingInfo(outputName);
 
     const unsigned int outputNumElements = classLabels.size();
-    vector<armnnUtils::TContainer> outputDataContainers = {vector<uint8_t>(outputNumElements)};
+    outputDataContainers = {vector<uint8_t>(outputNumElements)};
 
-    armnn::IRuntime::CreationOptions options;
     armnn::IRuntimePtr __runtime = armnn::IRuntime::Create(options);
     armnn::IOptimizedNetworkPtr __optNet = armnn::Optimize(*__network, {armnn::Compute::CpuAcc, armnn::Compute::CpuRef}, __runtime->GetDeviceSpec());
     
@@ -163,7 +166,7 @@ void TRTModule::loadModelAndPredict(string pathModel){
 
 TRTModule::TRTModule(string pathModel, string pathClasses){
     box = new bboxes;
-    imageShape = {640, 640};
+    imageShape = {640.f, 640.f};
     classColors = {0.f, 0.f, 255.f};
     classLabels.push_back(*get_classes(pathClasses).data());
     inputName += "conv2d_input";

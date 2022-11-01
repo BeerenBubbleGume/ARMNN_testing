@@ -8,6 +8,7 @@
 #include <armnn/Exceptions.hpp>
 #include <armnnUtils/Permute.hpp>
 #include <armnn/TypesUtils.hpp>
+#include <armnn/LayerSupport.hpp>
 //#include <armnnUtils/HeapProfiling.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 #include <vector>
