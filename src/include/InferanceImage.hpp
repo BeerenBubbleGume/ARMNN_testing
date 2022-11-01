@@ -5,7 +5,7 @@
 #pragma once
 
 #include <armnn/Exceptions.hpp>
-#include <VerificationHelpers.hpp>
+#include "VerificationHelpers.hpp"
 
 #include <array>
 #include <cstdint>
