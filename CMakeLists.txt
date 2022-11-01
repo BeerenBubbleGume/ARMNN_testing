@@ -28,7 +28,7 @@ add_executable(ARMNN_test   "main.cpp"
                             #"src/include/ImageTensorGenerator.hpp"
                             "src/source/VerificationHelpers.cpp"
                             #"src/include/arm_includes.hpp"
-                            "src/source/InferanceImage.cpp"
+                            "src/source/InferenceImage.cpp"
                             )
 
 set_property(TARGET ARMNN_test PROPERTY CXX_STANDARD 20)
