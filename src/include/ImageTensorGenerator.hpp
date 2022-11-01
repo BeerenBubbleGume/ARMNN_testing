@@ -1,7 +1,13 @@
-#pragma once
-#ifndef IMAGETENSORGENERATOR_HPP
-#define IMAGETENSORGENERATOR_HPP
 #include "InferanceImage.hpp"
+#include <armnn/TypesUtils.hpp>
+
+#include <armnnUtils/TContainer.hpp>
+#include <armnnUtils/Permute.hpp>
+
+#include <algorithm>
+#include <fstream>
+#include <iterator>
+#include <string>
 
 // Parameters used in normalizing images
 struct NormalizationParameters
@@ -197,4 +203,3 @@ void WriteImageTensorImpl<int8_t>(const vector<int8_t>& imageData, ofstream& ima
 {
     std::copy(imageData.begin(), imageData.end(), std::ostream_iterator<int>(imageTensorFile, " "));
 }
-#endif
