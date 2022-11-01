@@ -175,7 +175,7 @@ TRTModule::TRTModule(string pathModel, string pathClasses){
     classLabels.push_back(*get_classes(pathClasses).data());
     inputName += "conv2d_input";
     outputName += "activation_5/Softmax";
-    inputTensorBatchSize = 32;
+    inputTensorBatchSize = 1;
     inputTensorDataLayout = armnn::DataLayout::NHWC; 
     NormalizationParameters optParam;
     inputDataContainers = {PrepareImageTensor<uint8_t>(inVideoName, static_cast<int>(imageShape[0]), static_cast<int>(imageShape[1]), optParam, inputTensorBatchSize, inputTensorDataLayout)};
