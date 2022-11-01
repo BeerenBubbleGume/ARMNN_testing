@@ -22,9 +22,9 @@ add_compile_options(
     #-Woverloaded-virtual
 )
 
-add_executable(ARMNN_test   "src/source/VerificationHelpers.cpp"
+add_executable(ARMNN_test   "src/include/ImageTensorGenerator.hpp"
+                            "src/source/VerificationHelpers.cpp"
                             "src/include/arm_includes.hpp"
-                            "src/include/ImageTensorGenerator.hpp"
                             "src/include/InferanceImage.hpp"
                             "src/source/bbox.cpp"
                             "src/source/utils.cpp"
