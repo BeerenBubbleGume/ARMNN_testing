@@ -1,6 +1,12 @@
-#ifndef VERIFICATIONHELPERS_HPP
-#define VERIFICATIONHELPERS_HPP
-#include "arm_includes.hpp"
+//
+// Copyright © 2017 Arm Ltd. All rights reserved.
+// SPDX-License-Identifier: MIT
+//
+
+#include <iostream>
+#include <sstream>
+
+#include <armnn/Exceptions.hpp>
 
 namespace armnnUtils
 {
@@ -27,5 +33,3 @@ int32_t VerifyInt32(const char* expr,
 armnnUtils::CheckValidSize({__VA_ARGS__}, ACTUAL, #__VA_ARGS__, #ACTUAL, CHECK_LOCATION())
 
 #define CHECKED_NON_NEGATIVE(VALUE) armnnUtils::NonNegative(#VALUE, VALUE, CHECK_LOCATION())
-
-#endif
