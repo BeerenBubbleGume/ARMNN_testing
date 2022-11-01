@@ -174,7 +174,7 @@ TRTModule::TRTModule(string pathModel, string pathClasses){
     inputTensorBatchSize = 32;
     inputTensorDataLayout = armnn::DataLayout::NHWC; 
     NormalizationParameters optParam;
-    inputDataContainers = {PrepareImageTensor<uint8_t>(inVideoName, static_cast<int>(imageShape[0]), static_cast<int>(imageShape[1]), optParam, inputTensorBatchSize, inputTensorDataLayout)};
+    inputDataContainers = {PrepareImageTensor<float>(inVideoName, static_cast<int>(imageShape[0]), static_cast<int>(imageShape[1]), optParam, inputTensorBatchSize, inputTensorDataLayout)};
     loadModelAndPredict(pathModel);
 }
 
