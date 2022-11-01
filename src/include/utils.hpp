@@ -1,7 +1,6 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 #include "bbox.hpp"
-#include "../include/ImageTensorGenerator.hpp"
 struct ABC{
     static vector<string> get_classes(string classes_path);
     static nc::NdArray<float> letterbox(nc::NdArray<float> image, tuple<int ,int> expected_size);

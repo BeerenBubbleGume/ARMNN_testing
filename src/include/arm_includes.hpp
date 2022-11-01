@@ -25,8 +25,10 @@
 #include <fstream>
 #include <NumCpp.hpp>
 #include <array>
-#include <utility>
-#include <cstdint>
+
+#include "VerificationHelpers.hpp"
+#include "ImageTensorGenerator.hpp"
+#include "InferanceImage.hpp"
 
 using std::vector;
 using std::array;
