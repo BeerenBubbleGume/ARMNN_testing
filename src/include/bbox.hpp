@@ -1,4 +1,3 @@
-#pragma once
 #ifndef BBOX_HPP
 #define BBOX_HPP
 #include "arm_includes.hpp"

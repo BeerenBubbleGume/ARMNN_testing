@@ -1,4 +1,3 @@
-#pragma once
 #ifndef IMAGETENSORGENERATOR_HPP
 #define IMAGETENSORGENERATOR_HPP
 #include "InferanceImage.hpp"

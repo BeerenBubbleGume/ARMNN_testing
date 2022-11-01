@@ -2,8 +2,8 @@
 // Copyright © 2017 Arm Ltd. All rights reserved.
 // SPDX-License-Identifier: MIT
 //
-#pragma once
-
+#ifndef INFERENCE_IMAGE_HPP
+#define INFERENCE_IMAGE_HPP
 #include "arm_includes.hpp"
 
 class InferenceTestImageException : public armnn::Exception
@@ -137,3 +137,5 @@ vector<float> GetImageDataInArmNnLayoutAsFloatsSubtractingMean(ImageChannelLayou
 // supplied layout value.
 vector<float> GetImageDataAsNormalizedFloats(ImageChannelLayout layout,
                                                   const InferenceTestImage& image);
+
+#endif

@@ -1,7 +1,3 @@
-//
-// Copyright © 2017 Arm Ltd. All rights reserved.
-// SPDX-License-Identifier: MIT
-//
 #include "../include/InferanceImage.hpp"
 
 #include <armnn/utility/Assert.hpp>
