@@ -1,8 +1,8 @@
 #include "../include/utils.hpp"
 
-#include "VerificationHelpers.hpp"
-#include "ImageTensorGenerator.hpp"
-#include "InferanceImage.hpp"
+#include "../include/VerificationHelpers.hpp"
+#include "../include/ImageTensorGenerator.hpp"
+#include "../include/InferanceImage.hpp"
 
 vector<string> ABC::get_classes(string classes_path){
     ifstream in(classes_path);
