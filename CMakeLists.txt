@@ -22,13 +22,14 @@ add_compile_options(
     #-Woverloaded-virtual
 )
 
-add_executable(ARMNN_test   #"src/include/ImageTensorGenerator.hpp"
+add_executable(ARMNN_test   "src/source/bbox.cpp"
+                            "src/source/utils.cpp"
+                            "main.cpp"
+                            #"src/include/ImageTensorGenerator.hpp"
                             "src/source/VerificationHelpers.cpp"
                             #"src/include/arm_includes.hpp"
                             #"src/include/InferanceImage.hpp"
-                            "src/source/bbox.cpp"
-                            "src/source/utils.cpp"
-                            "main.cpp"
+                            
                             )
 
 set_property(TARGET ARMNN_test PROPERTY CXX_STANDARD 20)
