@@ -4,6 +4,9 @@
 //
 
 #include "../include/VerificationHelpers.hpp"
+#include <armnn/Exceptions.hpp>
+
+#include <fmt/format.h>
 
 using namespace armnn;
 
