@@ -158,6 +158,11 @@ void TRTModule::loadModelAndPredict(string pathModel){
     armnn::NetworkId networkIdentifier;
     runtime->get()->LoadNetwork(networkIdentifier, std::move(*optNet));
     
+    inputTensorBatchSize = 1;
+    inputTensorDataLayout = armnn::DataLayout::NHWC; 
+    NormalizationParameters optParam;
+
+    inputDataContainers = {PrepareImageTensor<uint8_t>(inVideoName, static_cast<int>(imageShape[0]), static_cast<int>(imageShape[1]), optParam, inputTensorBatchSize, inputTensorDataLayout)};
     armnn::Status ret = runtime->get()->EnqueueWorkload(networkIdentifier,
       armnnUtils::MakeInputTensors(inputBindings, inputDataContainers),
       armnnUtils::MakeOutputTensors(outputBindings, outputDataContainers));
@@ -175,10 +180,7 @@ TRTModule::TRTModule(string pathModel, string pathClasses){
     classLabels.push_back(*get_classes(pathClasses).data());
     inputName += "conv2d_input";
     outputName += "activation_5/Softmax";
-    inputTensorBatchSize = 1;
-    inputTensorDataLayout = armnn::DataLayout::NHWC; 
-    NormalizationParameters optParam;
-    inputDataContainers = {PrepareImageTensor<uint8_t>(inVideoName, static_cast<int>(imageShape[0]), static_cast<int>(imageShape[1]), optParam, inputTensorBatchSize, inputTensorDataLayout)};
+    
     loadModelAndPredict(pathModel);
 }
 
