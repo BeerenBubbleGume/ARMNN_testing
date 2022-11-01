@@ -25,10 +25,6 @@
 #include <NumCpp.hpp>
 #include <array>
 
-#include "VerificationHelpers.hpp"
-#include "ImageTensorGenerator.hpp"
-#include "InferanceImage.hpp"
-
 using std::vector;
 using std::array;
 using std::list;
