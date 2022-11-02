@@ -136,8 +136,9 @@ nc::NdArray<float> TRTModule::extractImage(nc::NdArray<float> img){
 }
 
 void TRTModule::loadModelAndPredict(string pathModel){
+    const char* pathModelPtr = pathModel.c_str();
     armnnOnnxParser::IOnnxParserPtr __parser = armnnOnnxParser::IOnnxParser::Create();
-    armnn::INetworkPtr __network = __parser->CreateNetworkFromBinaryFile(pathModel.c_str());
+    armnn::INetworkPtr __network = __parser->CreateNetworkFromBinaryFile(pathModelPtr);
     
     parser = &__parser;
     network = &__network;
