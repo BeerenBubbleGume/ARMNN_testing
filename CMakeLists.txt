@@ -11,7 +11,7 @@ add_compile_options(
     -Wextra
     -std=gnu++20
     -Wpedantic
-    -gdb
+    -g
     #-Wcast-align
     #-Wcast-qual
     #-Wconversion
