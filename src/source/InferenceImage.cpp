@@ -61,16 +61,9 @@ std::vector<float> ResizeBilinearAndNormalize(const InferenceTestImage & image,
 {
     std::vector<float> out;
     out.resize(outputWidth * outputHeight * 3);
-
-    // We follow the definition of TensorFlow and AndroidNN: the top-left corner of a texel in the output
-    // image is projected into the input image to figure out the interpolants and weights. Note that this
-    // will yield different results than if projecting the centre of output texels.
-
     const unsigned int inputWidth = image.GetWidth();
     const unsigned int inputHeight = image.GetHeight();
 
-    // How much to scale pixel coordinates in the output image to get the corresponding pixel coordinates
-    // in the input image.
     const float scaleY = armnn::numeric_cast<float>(inputHeight) / armnn::numeric_cast<float>(outputHeight);
     const float scaleX = armnn::numeric_cast<float>(inputWidth) / armnn::numeric_cast<float>(outputWidth);
 
@@ -81,27 +74,20 @@ std::vector<float> ResizeBilinearAndNormalize(const InferenceTestImage & image,
 
     for (unsigned int y = 0; y < outputHeight; ++y)
     {
-        // Corresponding real-valued height coordinate in input image.
         const float iy = armnn::numeric_cast<float>(y) * scaleY;
 
-        // Discrete height coordinate of top-left texel (in the 2x2 texel area used for interpolation).
         const float fiy = floorf(iy);
         const unsigned int y0 = armnn::numeric_cast<unsigned int>(fiy);
 
-        // Interpolation weight (range [0,1])
         const float yw = iy - fiy;
 
         for (unsigned int x = 0; x < outputWidth; ++x)
         {
-            // Real-valued and discrete width coordinates in input image.
             const float ix = armnn::numeric_cast<float>(x) * scaleX;
             const float fix = floorf(ix);
             const unsigned int x0 = armnn::numeric_cast<unsigned int>(fix);
-
-            // Interpolation weight (range [0,1]).
             const float xw = ix - fix;
 
-            // Discrete width/height coordinates of texels below and to the right of (x0, y0).
             const unsigned int x1 = std::min(x0 + 1, inputWidth - 1u);
             const unsigned int y1 = std::min(y0 + 1, inputHeight - 1u);
 
@@ -122,7 +108,7 @@ std::vector<float> ResizeBilinearAndNormalize(const InferenceTestImage & image,
     return out;
 }
 
-} // namespace
+}
 
 InferenceTestImage::InferenceTestImage(char const* filePath)
  : m_Width(0u)
