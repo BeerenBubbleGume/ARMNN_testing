@@ -98,11 +98,11 @@ vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData,
                         (inputData[inputData.none(), inputData.rSlice(), inputData.rSlice(), inputData.rSlice()]).toStlVector().data(),
                         inputData.toStlVector().size(), 
                         intVec));
-    ortInputs = session->Run(session->GetInputNames(), 
+    ortInputs.push_back(session->Run(session->GetInputNames(), 
                         ortInputs, 
-                        session->GetOutputNames());
+                        session->GetOutputNames())[0]);
                         
-    return box->preprocess(nc::NdArray<float>(ortInputs), imageShape, imgz);
+    return box->preprocess(nc::NdArray<float>(ortInputs.data()->GetTensorRawData()), imageShape, imgz);
 }
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     auto cap = cv::VideoCapture(videoSrc);
