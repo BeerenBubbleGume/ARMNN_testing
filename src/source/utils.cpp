@@ -94,7 +94,7 @@ nc::NdArray<float> ABC::preprocessInput(nc::NdArray<float> image){
 vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData, nc::NdArray<float> imgz){
     nc::NdArray<float> ortInputs{inputData[inputData.none(), inputData.rSlice(), inputData.rSlice(), inputData.rSlice()]};
     ortInputs += reinterpret_cast<float*>(
-        reinterpret_cast<Ort::Float16_t*>(session->Run(session->GetInputNames(), vector<Ort::Value>((long unsigned)*nc::toStlVector<float>(ortInputs).data()), session->GetOutputNames())));
+        dynamic_cast<Ort::Float16_t*>(session->Run(session->GetInputNames(), vector<Ort::Value>((long unsigned)*nc::toStlVector<float>(ortInputs).data()), session->GetOutputNames())));
     box->preprocess(ortInputs, imageShape, imgz);
 }
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
