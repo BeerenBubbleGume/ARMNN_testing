@@ -101,7 +101,7 @@ vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData,
     ortInputs = session->Run(session->GetInputNames(), 
                         ortInputs, 
                         session->GetOutputNames());
-    box->preprocess(nc::NdArray<Ort::Value>(ortInputs, true), imageShape, imgz);
+    box->preprocess(nc::NdArray<Ort::Value>(ortInputs.data(), true), imageShape, imgz);
 }
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     auto cap = cv::VideoCapture(videoSrc);
