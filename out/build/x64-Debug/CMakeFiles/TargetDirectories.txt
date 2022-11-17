@@ -1,9 +1,0 @@
-C:/Users/Operator/StudioProjects/untitled/ARMNN_testing/out/build/x64-Debug/CMakeFiles/ARMNN_test.dir
-C:/Users/Operator/StudioProjects/untitled/ARMNN_testing/out/build/x64-Debug/CMakeFiles/edit_cache.dir
-C:/Users/Operator/StudioProjects/untitled/ARMNN_testing/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
-C:/Users/Operator/StudioProjects/untitled/ARMNN_testing/out/build/x64-Debug/src/CMakeFiles/edit_cache.dir
-C:/Users/Operator/StudioProjects/untitled/ARMNN_testing/out/build/x64-Debug/src/CMakeFiles/rebuild_cache.dir
-C:/Users/Operator/StudioProjects/untitled/ARMNN_testing/out/build/x64-Debug/src/source/CMakeFiles/edit_cache.dir
-C:/Users/Operator/StudioProjects/untitled/ARMNN_testing/out/build/x64-Debug/src/source/CMakeFiles/rebuild_cache.dir
-C:/Users/Operator/StudioProjects/untitled/ARMNN_testing/out/build/x64-Debug/src/include/CMakeFiles/edit_cache.dir
-C:/Users/Operator/StudioProjects/untitled/ARMNN_testing/out/build/x64-Debug/src/include/CMakeFiles/rebuild_cache.dir

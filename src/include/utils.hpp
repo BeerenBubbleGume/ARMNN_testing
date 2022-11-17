@@ -26,6 +26,7 @@ protected:
     string inputName;
     string outputName;
     string inVideoName;
+    Ort::Experimental::Session;
     armnnOnnxParser::IOnnxParserPtr* parser;
     armnn::INetworkPtr* network;
     vector<armnnUtils::TContainer> inputDataContainers;

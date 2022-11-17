@@ -10,6 +10,7 @@
 #include <armnn/LayerSupport.hpp>
 //#include <armnnUtils/HeapProfiling.hpp>
 #include <opencv4/opencv2/opencv.hpp>
+#include <onnxruntime/core/session/experimental_onnxruntime_cxx_api.h>
 #include <vector>
 #include <sstream>
 #include <float.h>

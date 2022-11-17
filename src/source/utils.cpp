@@ -93,9 +93,7 @@ nc::NdArray<float> ABC::preprocessInput(nc::NdArray<float> image){
 
 vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData, nc::NdArray<float> imgz){
     nc::NdArray<float> ortInputs{inputData[inputData.none(), inputData.rSlice(), inputData.rSlice(), inputData.rSlice()]};
-    armnn::Status ret = runtime->get()->EnqueueWorkload(*networkIdentifier,
-      armnnUtils::MakeInputTensors(inputBindings, inputDataContainers),
-      armnnUtils::MakeOutputTensors(outputBindings, outputDataContainers));
+    ortInputs = session.Run(session.GetInputNames(), ortInputs, session.GetOutputNames());
     box->preprocess(ortInputs, imageShape, imgz);
 }
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
@@ -175,6 +173,9 @@ void TRTModule::loadModelAndPredict(string pathModel){
 }
 
 TRTModule::TRTModule(string pathModel, string pathClasses){
+    Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "example-model-explorer");
+    Ort::SessionOptions session_options;
+    session = Ort::Experimental::Session(env, pathModel, session_options);
     box = new bboxes;
     imageShape = {640.f, 640.f};
     classColors = {0.f, 0.f, 255.f};
@@ -182,9 +183,10 @@ TRTModule::TRTModule(string pathModel, string pathClasses){
     inputName += "conv2d_input";
     outputName += "activation_5/Softmax";
     
-    loadModelAndPredict(pathModel);
+    //loadModelAndPredict(pathModel);
 }
 
 TRTModule::~TRTModule(){
-
+    if(box!=nullptr)
+        delete box;
 }
