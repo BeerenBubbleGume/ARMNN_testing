@@ -102,7 +102,7 @@ vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData,
                         ortInputs, 
                         session->GetOutputNames());
                         
-    return box->preprocess(nc::NdArray<Ort::Value>(ortInputs.data(), true), imageShape, imgz);
+    return box->preprocess(nc::NdArray<float>(ortInputs.data(), true), imageShape, imgz);
 }
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     auto cap = cv::VideoCapture(videoSrc);
@@ -189,8 +189,8 @@ TRTModule::TRTModule(string pathModel, string pathClasses){
     imageShape = {640.f, 640.f};
     classColors = {0.f, 0.f, 255.f};
     classLabels.push_back(*get_classes(pathClasses).data());
-    inputName += "conv2d_input";
-    outputName += "activation_5/Softmax";
+    //inputName += "conv2d_input";
+    //outputName += "activation_5/Softmax";
     
     //loadModelAndPredict(pathModel);
 }
