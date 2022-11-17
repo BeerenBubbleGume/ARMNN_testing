@@ -60,13 +60,14 @@ target_link_libraries(ARMNN_test
                         opencv_stitching
                         opencv_videoio
                         opencv_video
-                        protobuf
-                        fmt
-                        armnn
-                        armnnOnnxParser
-                        armnnUtils
-                        armnnBasePipeServer
-                        armnnTestUtils
-                        timelineDecoderJson
-                        timelineDecoder
-                        armnnBasePipeServer)
+                        #protobuf
+                        #fmt
+                        #armnn
+                        #armnnOnnxParser
+                        #armnnUtils
+                        #armnnBasePipeServer
+                        #armnnTestUtils
+                        #timelineDecoderJson
+                        #timelineDecoder
+                        #armnnBasePipeServer
+                        )
