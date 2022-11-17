@@ -102,7 +102,7 @@ vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData,
                         ortInputs, 
                         session->GetOutputNames());
                         
-    return box->preprocess(nc::NdArray<float>(ortInputs.data(), true), imageShape, imgz);
+    return box->preprocess(nc::NdArray<float>(ortInputs), imageShape, imgz);
 }
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     auto cap = cv::VideoCapture(videoSrc);
@@ -132,7 +132,7 @@ nc::NdArray<float> TRTModule::extractImage(nc::NdArray<float> img){
     nc::NdArray<float> inputImageShape = nc::NdArray<float>(static_cast<int>(img.shape().cols, img.shape().rows));
     nc::NdArray<float> imageData = letterbox(img, tuple<float, float>(imageShape[1], imageShape[0]));
     imageData = nc::transpose(preprocessInput(nc::NdArray(imageData)));
-    vector<Ort::Value> __boxes__classes__scores(trtInference(imageData, inputImageShape));
+    vector<nc::NdArray<float>> __boxes__classes__scores(trtInference(imageData, inputImageShape));
 
     auto image = draw_visual(img, __boxes__classes__scores[0], 
                             __boxes__classes__scores[1], 
