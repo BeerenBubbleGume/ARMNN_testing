@@ -27,7 +27,7 @@ protected:
     string outputName;
     string inVideoName;
     Ort::Experimental::Session* session;
-    armnnOnnxParser::IOnnxParserPtr* parser;
+    /*armnnOnnxParser::IOnnxParserPtr* parser;
     armnn::INetworkPtr* network;
     vector<armnnUtils::TContainer> inputDataContainers;
     armnn::DataLayout inputTensorDataLayout;
@@ -38,7 +38,7 @@ protected:
     armnn::IOptimizedNetworkPtr* optNet;
     armnn::NetworkId* networkIdentifier;
     vector<armnnUtils::TContainer> outputDataContainers;
-    int inputTensorBatchSize;
+    int inputTensorBatchSize;*/
     vector<float> classColors;
     int numNames;
     vector<float> imageShape;

@@ -94,7 +94,7 @@ nc::NdArray<float> ABC::preprocessInput(nc::NdArray<float> image){
 vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData, nc::NdArray<float> imgz){
     nc::NdArray<float> ortInputs{inputData[inputData.none(), inputData.rSlice(), inputData.rSlice(), inputData.rSlice()]};
     ortInputs += reinterpret_cast<float*>(
-        dynamic_cast<Ort::Float16_t*>(session->Run(session->GetInputNames(), vector<Ort::Value>((long unsigned)*nc::toStlVector<float>(ortInputs).data()), session->GetOutputNames())));
+        static_cast<Ort::Float16_t*>(session->Run(session->GetInputNames(), vector<Ort::Value>((long unsigned)*nc::toStlVector<float>(ortInputs).data()), session->GetOutputNames())));
     box->preprocess(ortInputs, imageShape, imgz);
 }
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
@@ -134,7 +134,7 @@ nc::NdArray<float> TRTModule::extractImage(nc::NdArray<float> img){
     return image;
 }
 
-void TRTModule::loadModelAndPredict(string pathModel){
+/*void TRTModule::loadModelAndPredict(string pathModel){
     const char* pathModelPtr = pathModel.c_str();
     armnnOnnxParser::IOnnxParserPtr __parser = armnnOnnxParser::IOnnxParser::Create();
     armnn::INetworkPtr __network = __parser->CreateNetworkFromBinaryFile(pathModelPtr);
@@ -171,7 +171,7 @@ void TRTModule::loadModelAndPredict(string pathModel){
     // size_t labelInd = std::distance(output.begin(), std::max_element(output.begin(), output.end()));
     // std::cout << "Prediction: ";
     // std::cout << modelOutputLabels[labelInd] << std::endl;
-}
+}*/
 
 TRTModule::TRTModule(string pathModel, string pathClasses){
     Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "example-model-explorer");
