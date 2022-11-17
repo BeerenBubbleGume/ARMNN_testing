@@ -92,11 +92,13 @@ nc::NdArray<float> ABC::preprocessInput(nc::NdArray<float> image){
 }
 
 vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData, nc::NdArray<float> imgz){
-    vector<Ort::Value> ortInputs{(inputData[inputData.none(), inputData.rSlice(), inputData.rSlice(), inputData.rSlice()]).toStlVector().data()};
+    vector<Ort::Value> ortInputs;
+    ortInputs.push_back(rt::Experimental::Value::CreateTensor<float>((inputData[inputData.none(), inputData.rSlice(), inputData.rSlice(), inputData.rSlice()]).toStlVector().data(),
+                        inputData.toStlVector().size(), imgz.toStlVector()));
     ortInputs += session->Run(session->GetInputNames(), 
                         vector<Ort::Value>((long unsigned)*nc::toStlVector<float>(ortInputs).data()), 
                         session->GetOutputNames());
-    box->preprocess(ortInputs, imageShape, imgz);
+    box->preprocess(nc::NdArray<Ort::Value>(ortInputs), imageShape, imgz);
 }
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     auto cap = cv::VideoCapture(videoSrc);
