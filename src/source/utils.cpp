@@ -91,7 +91,7 @@ nc::NdArray<float> ABC::preprocessInput(nc::NdArray<float> image){
     return image;
 }
 
-vector<Ort::Value> TRTModule::trtInference(nc::NdArray<float> inputData, nc::NdArray<float> imgz){
+vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData, nc::NdArray<float> imgz){
     vector<Ort::Value> ortInputs;
     std::vector<int64_t> intVec(imgz.toStlVector().begin(), imgz.toStlVector().end());
     ortInputs.push_back(Ort::Experimental::Value::CreateTensor<float>(
