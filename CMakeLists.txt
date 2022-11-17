@@ -41,6 +41,9 @@ add_subdirectory("src")
 
 #target_include_directories(ARMNN_test /usr/include)
 #find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui video imgcodecs videoio features2d dnn gapi calib3d objdetect ml)
+#find_package(OpenCV REQUIRED)
+include_directories("/usr/local/include/")
+include_directories("/usr/local/include/opencv4")
 target_link_libraries(ARMNN_test
                         opencv_calib3d
                         opencv_core

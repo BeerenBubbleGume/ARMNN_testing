@@ -93,7 +93,7 @@ nc::NdArray<float> ABC::preprocessInput(nc::NdArray<float> image){
 
 vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData, nc::NdArray<float> imgz){
     nc::NdArray<float> ortInputs{inputData[inputData.none(), inputData.rSlice(), inputData.rSlice(), inputData.rSlice()]};
-    ortInputs = session.Run(session.GetInputNames(), ortInputs, session.GetOutputNames());
+    ortInputs += dynamic_cast<float*>((Ort::Float16_t*)(&session->Run(session->GetInputNames(), vector<Ort::Value>((long unsigned)*nc::toStlVector<float>(ortInputs).data()), session->GetOutputNames())));
     box->preprocess(ortInputs, imageShape, imgz);
 }
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
@@ -175,7 +175,8 @@ void TRTModule::loadModelAndPredict(string pathModel){
 TRTModule::TRTModule(string pathModel, string pathClasses){
     Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "example-model-explorer");
     Ort::SessionOptions session_options;
-    session = Ort::Experimental::Session(env, pathModel, session_options);
+    Ort::Experimental::Session session_ = Ort::Experimental::Session(env, pathModel, session_options);
+    session = &(*session);
     box = new bboxes;
     imageShape = {640.f, 640.f};
     classColors = {0.f, 0.f, 255.f};
