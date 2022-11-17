@@ -92,7 +92,7 @@ nc::NdArray<float> ABC::preprocessInput(nc::NdArray<float> image){
 }
 
 vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData, nc::NdArray<float> imgz){
-    vector<Ort::Value> ortInputs{(inputData[inputData.none(), inputData.rSlice(), inputData.rSlice(), inputData.rSlice()]).toStlVector()};
+    vector<Ort::Value> ortInputs{(inputData[inputData.none(), inputData.rSlice(), inputData.rSlice(), inputData.rSlice()]).toStlVector().data()};
     ortInputs += session->Run(session->GetInputNames(), 
                         vector<Ort::Value>((long unsigned)*nc::toStlVector<float>(ortInputs).data()), 
                         session->GetOutputNames());
