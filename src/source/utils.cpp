@@ -106,8 +106,8 @@ vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData,
 }
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     auto cap = cv::VideoCapture(videoSrc);
-    nc::NdArray<float> frame;
-    cap.read(cv::_OutputArray(frame.toStlVector()));
+    vector<float> frame;
+    cap.read(cv::_InputOutputArray(frame));
     auto width = cap.get(cv::CAP_PROP_FRAME_WIDTH);
     auto height = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
     std::chrono::duration<double> prevFrameTime = std::chrono::system_clock::now().time_since_epoch();
@@ -115,13 +115,13 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     auto out = cv::VideoWriter(outputPath, fourcc, fps, cv::Size(width, height));
 
     do{
-        if(!cap.read(cv::_OutputArray(frame.toStlVector())))
+        if(!cap.read(cv::_OutputArray(frame)))
             break;
         auto output = extractImage(frame);
         std::chrono::duration<double> newFrameTime = std::chrono::duration<double>(prevFrameTime);
         double FPS = 1 / (newFrameTime.count() - prevFrameTime.count());
         prevFrameTime = newFrameTime;
-        cv::putText(cv::_InputOutputArray(frame.toStlVector()), std::to_string(FPS), cv::Point(5, 30), cv::FONT_HERSHEY_SIMPLEX,
+        cv::putText(cv::_InputOutputArray(frame, std::to_string(FPS), cv::Point(5, 30), cv::FONT_HERSHEY_SIMPLEX,
                     0.5, cv::Scalar(0.0, 255.0, 255.0), 1);
         out.write(cv::InputArray(output));
     }while(cap.isOpened());

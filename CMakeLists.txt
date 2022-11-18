@@ -38,19 +38,21 @@ if(NOT CMAKE_CXX_EXTENSIONS)
 endif()
 
 add_subdirectory("src")
-
+include(FindPkgConfig)
+find_package(PkgConfig)
 #target_include_directories(ARMNN_test /usr/include)
 #find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui video imgcodecs videoio features2d dnn gapi calib3d objdetect ml)
 #find_package(OpenCV REQUIRED)
 include_directories("/usr/local/include/")
 include_directories("/usr/local/include/opencv4")
+
 target_link_libraries(ARMNN_test
                         opencv_calib3d
                         opencv_core
                         opencv_dnn
                         opencv_features2d
                         opencv_flann
-                        opencv_gapi
+			opencv_gapi
                         opencv_highgui
                         opencv_imgcodecs
                         opencv_imgproc
@@ -60,8 +62,21 @@ target_link_libraries(ARMNN_test
                         opencv_stitching
                         opencv_videoio
                         opencv_video
-                        #protobuf
-                        #fmt
+			custom_op_library
+			onnxruntime_providers_shared
+			onnxruntime
+			#"/usr/local/lib/libonnxruntime_common.a"
+			#"/usr/local/lib/libgatordMockService.a"
+			#"/usr/local/lib/libonnxruntime_providers.a"
+			#"/usr/local/lib/libonnxruntime_flatbuffers.a"
+			#"/usr/local/lib/libonnxruntime_framework.a"
+			#"/usr/local/lib/libonnxruntime_graph.a"
+			#"/usr/local/lib/libonnxruntime_mlas.a"
+			#"/usr/lovel/lib/libonnxruntime_mocked_allocator.a"
+			#"/usr/local/lib/libonnxruntime_optimizer.a"
+			#"/usr/local/lib/"
+                        protobuf
+			#fmt
                         #armnn
                         #armnnOnnxParser
                         #armnnUtils
