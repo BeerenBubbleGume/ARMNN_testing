@@ -105,8 +105,9 @@ vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData,
     return box->preprocess(nc::NdArray<float>((float*)&data, true), imageShape, imgz);
 }
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
-    auto cap = cv::VideoCapture(videoSrc);
+    auto cap = cv::VideoCapture(videoSrc, cv::CAP_FFMPEG);
     vector<float> frame;
+    
     cap.read(cv::_InputOutputArray(frame));
     auto width = cap.get(cv::CAP_PROP_FRAME_WIDTH);
     auto height = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
