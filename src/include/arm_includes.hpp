@@ -1,3 +1,4 @@
+#pragma once
 #ifndef ARM_INCLUDES_HPP
 #define ARM_INCLUDES_HPP
 /*#include <armnnOnnxParser/IOnnxParser.hpp>
@@ -10,7 +11,6 @@
 #include <armnn/LayerSupport.hpp>*/
 //#include <armnnUtils/HeapProfiling.hpp>
 #include <opencv4/opencv2/opencv.hpp>
-#include <onnxruntime/core/session/experimental_onnxruntime_cxx_api.h>
 #include <vector>
 #include <sstream>
 #include <float.h>
