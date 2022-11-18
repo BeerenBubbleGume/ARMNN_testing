@@ -117,8 +117,8 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     auto out = cv::VideoWriter(outputPath, fourcc, fps, cv::Size(width, height));
 
     do{
-        if(!cap.read(cv::_OutputArray(frame)))
-            break;
+        if(!cap.read(cv::OutputArray(frame)))
+            cap.release();
         auto output = extractImage(frame).toStlVector();
         std::chrono::duration<double> newFrameTime = std::chrono::duration<double>(prevFrameTime);
         double FPS = 1 / (newFrameTime.count() - prevFrameTime.count());
