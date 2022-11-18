@@ -106,7 +106,7 @@ vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData,
 }
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     
-    auto cap = cv::VideoCapture(videoSrc, cv::CAP_FFMPEG);
+    auto cap = cv::VideoCapture(videoSrc);
     vector<float> frame;
     
     cap.read(cv::OutputArray(frame));
