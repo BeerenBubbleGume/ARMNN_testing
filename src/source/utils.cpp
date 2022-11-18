@@ -121,7 +121,7 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
         std::chrono::duration<double> newFrameTime = std::chrono::duration<double>(prevFrameTime);
         double FPS = 1 / (newFrameTime.count() - prevFrameTime.count());
         prevFrameTime = newFrameTime;
-        cv::putText(cv::_InputOutputArray(frame, std::to_string(FPS), cv::Point(5, 30), cv::FONT_HERSHEY_SIMPLEX,
+        cv::putText(frame, std::to_string(FPS), cv::Point(5, 30), cv::FONT_HERSHEY_SIMPLEX,
                     0.5, cv::Scalar(0.0, 255.0, 255.0), 1);
         out.write(cv::InputArray(output));
     }while(cap.isOpened());
