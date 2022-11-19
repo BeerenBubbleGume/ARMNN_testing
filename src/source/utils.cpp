@@ -20,8 +20,8 @@ vector<string> ABC::get_classes(string classes_path){
 }
 
 nc::NdArray<float> ABC::letterbox(nc::NdArray<float> image, vector<float> expected_size){
-    auto ih = image.shape().rows;
-    auto iw = image.shape().cols;
+    auto ih = image[0];
+    auto iw = image[1];
     auto eh = expected_size[0];
     auto ew = expected_size[1];
     auto scale = std::min(eh / iw, ew / iw);
