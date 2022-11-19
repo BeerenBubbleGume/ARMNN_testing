@@ -96,7 +96,7 @@ vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData,
     vector<Ort::Value> ortInputs;
     vector<int64_t> intVec(imgz.begin(), imgz.end());
     ortInputs.push_back(Ort::Experimental::Value::CreateTensor<float>(
-                        (inputData[inputData.none(), inputData.rSlice(), inputData.rSlice(), inputData.rSlice()]).toStlVector().data(),
+                        (inputData[inputData.rSlice(), inputData.rSlice(), inputData.rSlice()]).toStlVector().data(),
                         inputData.toStlVector().size(), 
                         intVec));
     ortInputs = session->Run(session->GetInputNames(), 
