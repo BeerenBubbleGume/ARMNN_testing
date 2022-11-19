@@ -141,7 +141,8 @@ nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
     
     std::vector<float> array;
     if (img.isContinuous()) 
-        array.assign((float*)img.data, (float*)img.data + img.total()*img.channels());
+        array.assign((float*)img.datastart, (float*)img.dataend);
+        //array.assign((float*)img.data, (float*)img.data + img.total()*img.channels());
     else {
         for (int i = 0; i < img.rows; ++i)
             array.insert(array.end(), img.ptr<float>(i), img.ptr<float>(i)+img.cols*img.channels());
