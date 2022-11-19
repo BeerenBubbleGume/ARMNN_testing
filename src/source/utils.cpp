@@ -30,9 +30,10 @@ nc::NdArray<float> ABC::letterbox(cv::Mat image, vector<float> expected_size){
 
     cv::resize(image, image, cv::Size(nw, nh), 0.0, 0.0, cv::INTER_CUBIC);
     nc::NdArray<float> newImage = nc::full(nc::Shape(eh, ew), (float)128.0);
-    image.copyTo(newImage[nc::floor_divide((eh - nh), (nc::floor_divide(newImage(2, nc::int32(eh - nh)), newImage[2 + nh]))), 
+    
+    newImage[nc::floor_divide((eh - nh), (nc::floor_divide(newImage(2, nc::int32(eh - nh)), newImage[2 + nh]))), 
             nc::floor_divide((ew - nw), (nc::floor_divide(newImage(2, nc::int32(ew - nw)), newImage[2 + nw]))), 
-            newImage.rSlice()].toStlVector());
+            newImage.rSlice()] = nc::copy(nc::NdArray<float>((image)));
     
     return newImage;
 }
