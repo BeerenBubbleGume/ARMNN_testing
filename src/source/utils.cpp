@@ -27,7 +27,7 @@ nc::NdArray<float> ABC::letterbox(cv::Mat image, tuple<int ,int> expected_size){
     auto nh = int(ih*scale);
     auto nw = int(iw * scale);
 
-    cv::resize(*(cv::_InputArray*)&image, *(cv::_OutputArray*)&image, cv::Size(nw, nh), 0.0, 0.0, cv::INTER_CUBIC);
+    cv::resize(image, image, cv::Size(nw, nh), 0.0, 0.0, cv::INTER_CUBIC);
     nc::NdArray<float> newImage = nc::full(nc::Shape(eh, ew), (float)128.0);
     
     return newImage;
