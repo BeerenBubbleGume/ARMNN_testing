@@ -19,16 +19,20 @@ vector<string> ABC::get_classes(string classes_path){
     return classes_names;
 }
 
-nc::NdArray<float> ABC::letterbox(cv::Mat image, tuple<float ,float> expected_size){
+nc::NdArray<float> ABC::letterbox(cv::Mat image, vector<float> expected_size){
     auto ih = image.rows;
     auto iw = image.cols;
-    auto [eh, ew] = expected_size;
+    auto eh = expected_size[0];
+    auto ew = expected_size[1];
     auto scale = std::min(eh / iw, ew / iw);
     auto nh = int(ih*scale);
     auto nw = int(iw * scale);
 
     cv::resize(image, image, cv::Size(nw, nh), 0.0, 0.0, cv::INTER_CUBIC);
     nc::NdArray<float> newImage = nc::full(nc::Shape(eh, ew), (float)128.0);
+    image.copyTo(newImage[nc::floor_divide((eh - nh), (nc::floor_divide(newImage(2, nc::int32(eh - nh)), newImage[2 + nh]))), 
+            nc::floor_divide((ew - nw), (nc::floor_divide(newImage(2, nc::int32(ew - nw)), newImage[2 + nw]))), 
+            newImage.rSlice()].toStlVector());
     
     return newImage;
 }
