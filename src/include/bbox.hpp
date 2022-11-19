@@ -8,7 +8,7 @@ public:
     virtual ~bboxes();
     
     static nc::NdArray<float>  yolo_correct_boxes(nc::NdArray<float>  box_xy, nc::NdArray<float>  box_wh, 
-                                vector<float> input_shape, vecotr<float> image_shape);
+                                vector<float> input_shape, vector<float> image_shape);
     vector<nc::NdArray<float>> preprocess(nc::NdArray<float> output, vector<float> input_shape, vector<float> image_shape);
 
 };

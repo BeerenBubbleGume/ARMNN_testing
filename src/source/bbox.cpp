@@ -25,7 +25,7 @@ nc::NdArray<float> bboxes::yolo_correct_boxes(nc::NdArray<float>  box_xy, nc::Nd
                                     boxMaxes(boxMaxes.rSlice(), nc::Slice(0, 1)),
                                     boxMaxes(boxMaxes.rSlice(), nc::Slice(1, 2))};
     auto boxes = nc::concatenate(listBoxPoints, nc::Axis(-1));
-    auto _imageShape = {imageShape, image_shape};
+    auto _imageShape = {imageShape, nc::NdArray<float>(image_shape.begin(), image_shape.end())};
     boxes *= nc::concatenate(_imageShape, nc::Axis(-1));
     return boxes;
 }
