@@ -19,7 +19,7 @@ vector<string> ABC::get_classes(string classes_path){
     return classes_names;
 }
 
-nc::NdArray<float> ABC::letterbox(cv::Mat image, tuple<int ,int> expected_size){
+nc::NdArray<float> ABC::letterbox(cv::Mat image, tuple<float ,float> expected_size){
     auto ih = image.rows;
     auto iw = image.cols;
     auto [eh, ew] = expected_size;

@@ -2,9 +2,10 @@
 #define UTILS_HPP
 #include "bbox.hpp"
 #include <onnxruntime/core/session/experimental_onnxruntime_cxx_api.h>
+#include <limits>
 struct ABC{
     static vector<string> get_classes(string classes_path);
-    static nc::NdArray<float> letterbox(cv::Mat image, tuple<int ,int> expected_size);
+    static nc::NdArray<float> letterbox(cv::Mat image, tuple<float ,float> expected_size);
     static nc::NdArray<float> draw_visual(cv::Mat image, nc::NdArray<float> __boxes, nc::NdArray<float> __scores,
                         nc::NdArray<float> __classes, vector<string> class_labels, vector<float> class_colors);
     static nc::NdArray<float> preprocessInput(nc::NdArray<float> image);
