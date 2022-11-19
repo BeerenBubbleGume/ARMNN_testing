@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.13)
 
 project(ARMNN_test VERSION 0.0 LANGUAGES CXX)
 
-set(CMAKE_C_COMPILER "aarch64-linux-gnu-gcc-11")
-set(CMAKE_CXX_COMPILER "aarch64-linux-gnu-g++-11")
+set(CMAKE_C_COMPILER "gcc")
+set(CMAKE_CXX_COMPILER "g++")
 
 add_compile_options(
     #-Werror
@@ -25,7 +25,7 @@ add_compile_options(
 add_executable(ARMNN_test   "main.cpp"
                             "src/source/utils.cpp"
                             "src/source/bbox.cpp"
-                            
+
                             #"src/include/ImageTensorGenerator.hpp"
                             #"src/source/VerificationHelpers.cpp"
                             #"src/include/arm_includes.hpp"
@@ -54,7 +54,7 @@ target_link_libraries(ARMNN_test
                         opencv_dnn
                         opencv_features2d
                         opencv_flann
-			opencv_gapi
+			#opencv_gapi
                         opencv_highgui
                         opencv_imgcodecs
                         opencv_imgproc
