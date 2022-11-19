@@ -1,7 +1,7 @@
 #include "../include/bbox.hpp"
 
 nc::NdArray<float> bboxes::yolo_correct_boxes(nc::NdArray<float>  box_xy, nc::NdArray<float>  box_wh, 
-                                vector<float> input_shape, nc::NdArray<float> image_shape){
+                                vector<float> input_shape, vector<float> image_shape){
     auto boxYX = box_xy(box_xy.rSlice(), nc::Slice(-1));
     auto boxHW = box_wh(box_wh.rSlice(), nc::Slice(-1));
     auto inputShape = nc::NdArray<float>(input_shape);
@@ -30,7 +30,7 @@ nc::NdArray<float> bboxes::yolo_correct_boxes(nc::NdArray<float>  box_xy, nc::Nd
     return boxes;
 }
 
-vector<nc::NdArray<float>> bboxes::preprocess(nc::NdArray<float> output, vector<float> image_data, nc::NdArray<float> image_shape){
+vector<nc::NdArray<float>> bboxes::preprocess(nc::NdArray<float> output, vector<float> image_data, vector<float> image_shape){
     auto boxXY = (output(output.rSlice(), {0, 2}) + output(output.rSlice(), {2, 4})) / 2.f;
     auto boxWH = output(output.rSlice(), {2, 4}) - output(output.rSlice(), {0, 2});
 

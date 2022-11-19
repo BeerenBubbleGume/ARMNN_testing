@@ -92,13 +92,13 @@ nc::NdArray<float> ABC::preprocessInput(nc::NdArray<float> image){
     return image;
 }
 
-vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData, nc::NdArray<float> imgz){
+vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData, vector<float> imgz){
     vector<Ort::Value> ortInputs;
-    //std::vector<int64_t> intVec(imgz.toStlVector().size, imgz.toStlVector().end());
+    vector<int64_t> intVec(imgz[0], imgz[1]);
     ortInputs.push_back(Ort::Experimental::Value::CreateTensor<float>(
                         (inputData[inputData.none(), inputData.rSlice(), inputData.rSlice(), inputData.rSlice()]).toStlVector().data(),
                         inputData.toStlVector().size(), 
-                        imgz.toStlVector()));
+                        intVec));
     ortInputs = session->Run(session->GetInputNames(), 
                         ortInputs, 
                         session->GetOutputNames());
@@ -133,7 +133,7 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
 }
 
 nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
-    nc::NdArray<float> inputImageShape = nc::NdArray<float>(static_cast<int>(img.cols, img.rows));
+    auto inputImageShape = vector<float>((img.cols, img.rows));
     nc::NdArray<float> imageData = letterbox(img, tuple<float, float>(imageShape[1], imageShape[0]));
     imageData = nc::transpose(preprocessInput(nc::NdArray(imageData)));
     vector<nc::NdArray<float>> __boxes__classes__scores(trtInference(imageData, inputImageShape));
