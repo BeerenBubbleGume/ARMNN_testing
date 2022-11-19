@@ -19,8 +19,9 @@ vector<string> ABC::get_classes(string classes_path){
     return classes_names;
 }
 
-nc::NdArray<float> ABC::letterbox(nc::NdArray<float> image, tuple<int ,int> expected_size){
-    auto [ih, iw] = image.shape();
+nc::NdArray<float> ABC::letterbox(cv::Mat image, tuple<int ,int> expected_size){
+    auto ih = image.rows;
+    auto iw = image.cols;
     auto [eh, ew] = expected_size;
     auto scale = std::min(eh / iw, ew / iw);
     auto nh = int(ih*scale);
@@ -45,10 +46,10 @@ nc::NdArray<float> draw_line(nc::NdArray<float> image, int x, int y, int x1, int
     return image;
 }
 
-nc::NdArray<float> ABC::draw_visual(nc::NdArray<float> image, nc::NdArray<float> __boxes, nc::NdArray<float> __scores,
+nc::NdArray<float> ABC::draw_visual(cv::Mat image, nc::NdArray<float> __boxes, nc::NdArray<float> __scores,
                         nc::NdArray<float> __classes, vector<string> class_labels, vector<float> class_colors){
     list<double> _box_color = {255., 0., 0.};
-    auto img_src = nc::NdArray(image);
+    auto img_src = (vector<float>)image;
     for (auto i = 0; i < static_cast<int>(__classes.size()); ++i){
         for (auto c = 0;  c < static_cast<int>(__classes.size()); ++c){
             auto predictedClass = class_labels[c];
@@ -107,7 +108,7 @@ vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData,
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     
     auto cap = cv::VideoCapture(videoSrc);
-    vector<float> frame;
+    cv::Mat frame;
     cap.read(cv::OutputArray(frame));
     
     auto width = cap.get(cv::CAP_PROP_FRAME_WIDTH);
@@ -126,13 +127,13 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
         cv::putText(cv::InputOutputArray(output), std::to_string(FPS), cv::Point(5, 30), cv::FONT_HERSHEY_SIMPLEX,
                     0.5, cv::Scalar(0.0, 255.0, 255.0), 1);
         out.write(cv::InputArray(output));
-        frame.clear();
+        
     }while(cap.isOpened());
     out.release();
 }
 
-nc::NdArray<float> TRTModule::extractImage(nc::NdArray<float> img){
-    nc::NdArray<float> inputImageShape = nc::NdArray<float>(static_cast<int>(img.shape().cols, img.shape().rows));
+nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
+    nc::NdArray<float> inputImageShape = nc::NdArray<float>(static_cast<int>(img.cols, img.rows));
     nc::NdArray<float> imageData = letterbox(img, tuple<float, float>(imageShape[1], imageShape[0]));
     imageData = nc::transpose(preprocessInput(nc::NdArray(imageData)));
     vector<nc::NdArray<float>> __boxes__classes__scores(trtInference(imageData, inputImageShape));
