@@ -138,7 +138,7 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
 
 nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
     auto inputImageShape = vector<float>((img.cols, img.rows));
-    img.convertTo(img, cv::CV_32F);
+    
     std::vector<float> array;
     if (img.isContinuous()) 
         array.assign((float*)img.data, (float*)img.data + img.total()*img.channels());
