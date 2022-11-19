@@ -126,6 +126,7 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
         cv::putText(cv::InputOutputArray(output), std::to_string(FPS), cv::Point(5, 30), cv::FONT_HERSHEY_SIMPLEX,
                     0.5, cv::Scalar(0.0, 255.0, 255.0), 1);
         out.write(cv::InputArray(output));
+        frame.clear();
     }while(cap.isOpened());
     out.release();
 }

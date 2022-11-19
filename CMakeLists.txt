@@ -77,7 +77,7 @@ target_link_libraries(ARMNN_test
 			#"/usr/lovel/lib/libonnxruntime_mocked_allocator.a"
 			#"/usr/local/lib/libonnxruntime_optimizer.a"
 			#"/usr/local/lib/"
-                        protobuf
+                        #protobuf
 			#fmt
                         #armnn
                         #armnnOnnxParser
