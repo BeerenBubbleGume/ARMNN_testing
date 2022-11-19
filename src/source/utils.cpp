@@ -138,17 +138,16 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
 
 nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
     auto inputImageShape = vector<float>((img.cols, img.rows));
-    /*std::vector<float> array;
+    img.convertTo(img, 5);
+    std::vector<float> array;
     if (img.isContinuous()) 
         array.assign((float*)img.datastart, (float*)img.dataend);
         //array.assign((float*)img.data, (float*)img.data + img.total()*img.channels());
     else {
         for (int i = 0; i < img.rows; ++i)
             array.insert(array.end(), img.ptr<float>(i), img.ptr<float>(i)+img.cols*img.channels());
-    }*/
-    vector<float> imgSrc;
-    cv::copyTo(img, imgSrc, img);
-    nc::NdArray<float> imageData = letterbox(nc::NdArray<float>(imgSrc), imageShape);
+    }
+    nc::NdArray<float> imageData = letterbox(array, imageShape);
     imageData = nc::transpose(preprocessInput(nc::NdArray(imageData)));
     vector<nc::NdArray<float>> __boxes__classes__scores(trtInference(imageData, inputImageShape));
 
