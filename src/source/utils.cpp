@@ -30,10 +30,10 @@ cv::Mat ABC::letterbox(cv::Mat image, vector<float> expected_size){
     iw /= 2, ih /= 2;
     cv::resize(image, image, cv::Size(nw, nh), 0.0, 0.0, cv::INTER_CUBIC);
     cv::Mat newImage/* = nc::full(nc::Shape(eh, ew), 128.f)*/;
-    int top = int(round(eh - nh));
-    int bottom = int(round(eh + nh));
-    int left = int(round(ew - nw));
-    int right = int(round(ew + nw));
+    int top = int(round(eh - 1.0));
+    int bottom = int(round(eh + 1.0));
+    int left = int(round(ew - 1.0));
+    int right = int(round(ew + 1.0));
     cv::copyMakeBorder(image, newImage, top, bottom, left, right, cv::BORDER_CONSTANT);
 
     /*newImage(nc::floor_divide(int(eh - nh), int(nc::floor_divide(newImage(2, nc::int32(eh - nh)), newImage[2 + nh]))), 
