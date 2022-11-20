@@ -28,7 +28,7 @@ protected:
     string inputName;
     string outputName;
     string inVideoName;
-    Ort::Experimental::Session* session;
+    Ort::Experimental::Session session;
     /*armnnOnnxParser::IOnnxParserPtr* parser;
     armnn::INetworkPtr* network;
     vector<armnnUtils::TContainer> inputDataContainers;
@@ -51,7 +51,7 @@ protected:
     virtual ~TRTModule();
     
 public:
-    TRTModule(string pathModel, string pathClasses);
+    TRTModule(string pathModel, string pathClasses, Ort::SessionOptions& session_options, Ort::Env& env);
     nc::NdArray<float> extractImage(cv::Mat img);
     void startNN(string videoSrc, string outputPath, int fps);
 };

@@ -104,10 +104,10 @@ vector<nc::NdArray<float>> TRTModule::trtInference(cv::Mat inputData, list<float
     //const vector<int64_t> shape{inputData.rows, inputData.cols};
     //vector<float> inputTensorValues(inputData.size().area());
     //inputTensorValues.assign(inputData.begin<float>(), inputData.end<float>()); 
-    ortInputs.push_back(Ort::Experimental::Value::CreateTensor(inputData.data, inputData.size().area(), session->GetInputShapes()[0]));
-    ortInputs = session->Run(session->GetInputNames(), 
+    ortInputs.push_back(Ort::Experimental::Value::CreateTensor(inputData.data, inputData.size().area(), session.GetInputShapes()[0]));
+    ortInputs = session.Run(session.GetInputNames(), 
                         ortInputs, 
-                        session->GetOutputNames());
+                        session.GetOutputNames());
     auto data = ortInputs.data()->GetTensorRawData();
     return box->preprocess(nc::NdArray<float>((float*)&data, true), imageShape, imgz);
 }
@@ -202,11 +202,9 @@ nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
     // std::cout << modelOutputLabels[labelInd] << std::endl;
 }*/
 
-TRTModule::TRTModule(string pathModel, string pathClasses){
-    Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "example-model-explorer");
-    Ort::SessionOptions session_options;
-    Ort::Experimental::Session session_ = Ort::Experimental::Session(env, pathModel, session_options);
-    session = &(*session);
+TRTModule::TRTModule(string pathModel, string pathClasses, Ort::SessionOptions& session_options, Ort::Env& env)
+ : session(Ort::Experimental::Session(env, pathModel, session_options)){
+    //session = &(*session);
     box = new bboxes;
     imageShape = {640.f, 640.f};
     classColors = {0.f, 0.f, 255.f};
