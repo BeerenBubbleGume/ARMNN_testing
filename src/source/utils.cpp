@@ -19,7 +19,7 @@ vector<string> ABC::get_classes(string classes_path){
     return classes_names;
 }
 
-nc::NdArray<float> ABC::letterbox(cv::Mat image, vector<float> expected_size){
+cv::Mat ABC::letterbox(cv::Mat image, vector<float> expected_size){
     auto ih = image.rows;
     auto iw = image.cols;
     auto eh = expected_size[0];
@@ -27,14 +27,14 @@ nc::NdArray<float> ABC::letterbox(cv::Mat image, vector<float> expected_size){
     auto scale = std::min(eh / iw, ew / iw);
     auto nh = (ih*scale);
     auto nw = (iw * scale);
-    
+    iw /= 2, ih /= 2;
     cv::resize(image, image, cv::Size(nw, nh), 0.0, 0.0, cv::INTER_CUBIC);
-    nc::NdArray<float> newImage = nc::full(nc::Shape(eh, ew), 128.f);
+    cv::Mat newImage/* = nc::full(nc::Shape(eh, ew), 128.f)*/;
     int top = int(round(eh - nh));
     int bottom = int(round(eh + nh));
     int left = int(round(ew - nw));
     int right = int(round(ew + nw));
-    cv::copyMakeBorder(image, newImage.toStlVector(), top, bottom, left, right, cv::BORDER_CONSTANT);
+    cv::copyMakeBorder(image, newImage, top, bottom, left, right, cv::BORDER_CONSTANT);
 
     /*newImage(nc::floor_divide(int(eh - nh), int(nc::floor_divide(newImage(2, nc::int32(eh - nh)), newImage[2 + nh]))), 
             nc::floor_divide(int(ew - nw), int(nc::floor_divide(newImage(2, nc::int32(ew - nw)), newImage[2 + nw]))), (float*)image.data);
@@ -153,9 +153,10 @@ nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
             array.insert(array.end(), img.ptr<float>(i), img.ptr<float>(i)+img.cols*img.channels());
     }*/
     
-    nc::NdArray<float> imageData = letterbox(img, imageShape);
-    imageData = nc::transpose(preprocessInput(nc::NdArray(imageData)));
-    vector<nc::NdArray<float>> __boxes__classes__scores(trtInference(imageData, inputImageShape));
+    cv::Mat imageData = letterbox(img, imageShape);
+    imageData = (cv::Mat)nc::transpose(preprocessInput(nc::NdArray<float>(imageData))).toStlVector();
+    
+    vector<nc::NdArray<float>> __boxes__classes__scores(trtInference(nc::NdArray<float>((float*)imageData.data, imageData.rows, imageData.cols), inputImageShape));
 
     auto image = draw_visual(img, __boxes__classes__scores[0], 
                             __boxes__classes__scores[1], 
