@@ -35,7 +35,7 @@ cv::Mat ABC::letterbox(cv::Mat image, vector<float> expected_size){
     int left = int(round(ew - 1.0));
     int right = int(round(ew + 1.0));
     cv::copyMakeBorder(image, newImage, top, bottom, left, right, cv::BORDER_CONSTANT);
-
+    
     /*newImage(nc::floor_divide(int(eh - nh), int(nc::floor_divide(newImage(2, nc::int32(eh - nh)), newImage[2 + nh]))), 
             nc::floor_divide(int(ew - nw), int(nc::floor_divide(newImage(2, nc::int32(ew - nw)), newImage[2 + nw]))), (float*)image.data);
     //nc::copy(nc::NdArray<float>(image.begin<float>(), image.end<float>())).data()*/
@@ -94,10 +94,8 @@ void display_process_time(){
     printf("Result: %.20f\n", sum);
 }
 
-nc::NdArray<float> ABC::preprocessInput(nc::NdArray<float> image){
-    for (int i : image){
-        image[i] = image[i] / 255.0;
-    }
+cv::Mat ABC::preprocessInput(cv::Mat image){
+    cv::divide(255.0, image, image);
     return image;
 }
 
@@ -154,13 +152,7 @@ nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
     }*/
     
     cv::Mat_ imageData = cv::Mat_<float>(letterbox(img, imageShape)); 
-    for (int row = 0; row < imageData.rows; ++row)
-    {
-        for (int col = 0; col < imageData.cols; ++col){
-            imageData(col, row) = imageData(row, col);
-            imageData(col, row) /= 255.0;
-        } 
-    }
+    cv::transpose(preprocessInput(imageData), imageData);
     
     /*(cv::Mat)nc::transpose(preprocessInput(nc::NdArray<float>(imageData.begin<float>(), imageData.end<float>()))).toStlVector();*/
     vector<nc::NdArray<float>> __boxes__classes__scores(trtInference(nc::NdArray<float>((float*)imageData.data, imageData.rows, imageData.cols), inputImageShape));
