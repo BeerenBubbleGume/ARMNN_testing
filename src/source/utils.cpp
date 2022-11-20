@@ -30,9 +30,15 @@ nc::NdArray<float> ABC::letterbox(cv::Mat image, vector<float> expected_size){
     
     cv::resize(image, image, cv::Size(nw, nh), 0.0, 0.0, cv::INTER_CUBIC);
     nc::NdArray<float> newImage = nc::full(nc::Shape(eh, ew), 128.f);
-    newImage(nc::floor_divide(int(eh - nh), int(nc::floor_divide(newImage(2, nc::int32(eh - nh)), newImage[2 + nh]))), 
-            nc::floor_divide(int(ew - nw), int(nc::floor_divide(newImage(2, nc::int32(ew - nw)), newImage[2 + nw])))) = *nc::copy(nc::NdArray<float>(image.begin<float>(), image.end<float>())).data();
-    
+    int top = int(round(eh - nh));
+    int bottom = int(round(eh + nh));
+    int left = int(round(ew - nw));
+    int right = int(round(ew + nw));
+    cv::copyMakeBorder(image, newImage.toStlVector(), top, bottom, left, right, cv::BORDER_CONSTANT);
+
+    /*newImage(nc::floor_divide(int(eh - nh), int(nc::floor_divide(newImage(2, nc::int32(eh - nh)), newImage[2 + nh]))), 
+            nc::floor_divide(int(ew - nw), int(nc::floor_divide(newImage(2, nc::int32(ew - nw)), newImage[2 + nw]))), (float*)image.data);
+    //nc::copy(nc::NdArray<float>(image.begin<float>(), image.end<float>())).data()*/
     return newImage;
 }
 
