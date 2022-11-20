@@ -151,8 +151,8 @@ nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
     }*/
     
     cv::Mat_ imageData = cv::Mat_<float>(letterbox(img, imageShape)); 
-    cv::transpose(preprocessInput(imageData), imageData);
-    
+    cv::transpose(imageData, imageData);
+    imageData = preprocessInput(imageData);
     /*(cv::Mat)nc::transpose(preprocessInput(nc::NdArray<float>(imageData.begin<float>(), imageData.end<float>()))).toStlVector();*/
     vector<nc::NdArray<float>> __boxes__classes__scores(trtInference(imageData, inputImageShape));
 
