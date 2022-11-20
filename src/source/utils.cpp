@@ -19,16 +19,16 @@ vector<string> ABC::get_classes(string classes_path){
     return classes_names;
 }
 
-nc::NdArray<float> ABC::letterbox(nc::NdArray<float> image, vector<float> expected_size){
-    auto ih = image.shape().rows;
-    auto iw = image.shape().cols;
+nc::NdArray<float> ABC::letterbox(cv::Mat image, vector<float> expected_size){
+    auto ih = image.rows;
+    auto iw = image.cols;
     auto eh = expected_size[0];
     auto ew = expected_size[1];
     auto scale = std::min(eh / iw, ew / iw);
     auto nh = (ih*scale);
     auto nw = (iw * scale);
     
-    cv::resize(image.toStlVector(), image.toStlVector(), cv::Size(nw, nh), 0.0, 0.0, cv::INTER_CUBIC);
+    cv::resize(image, image, cv::Size(nw, nh), 0.0, 0.0, cv::INTER_CUBIC);
     nc::NdArray<float> newImage = nc::full(nc::Shape(eh, ew), 128.f);
     newImage[nc::floor_divide((eh - nh), (nc::floor_divide(newImage(2, nc::int32(eh - nh)), newImage[2 + nh]))), 
             nc::floor_divide((ew - nw), (nc::floor_divide(newImage(2, nc::int32(ew - nw)), newImage[2 + nw]))), 
@@ -139,7 +139,7 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
 nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
     auto inputImageShape = vector<float>((img.cols, img.rows));
     img.convertTo(img, 5);
-    vector<float> array((float*)img.data, img.total() + (float*)img.data);
+    //vector<vector<float>> array((float*)img.data, img.total() + (float*)img.data);
     /*if (img.isContinuous()) 
         //array.assign((float*)img.datastart, (float*)img.dataend);
         array;
@@ -148,7 +148,7 @@ nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
             array.insert(array.end(), img.ptr<float>(i), img.ptr<float>(i)+img.cols*img.channels());
     }*/
     
-    nc::NdArray<float> imageData = letterbox(array, imageShape);
+    nc::NdArray<float> imageData = letterbox(img, imageShape);
     imageData = nc::transpose(preprocessInput(nc::NdArray(imageData)));
     vector<nc::NdArray<float>> __boxes__classes__scores(trtInference(imageData, inputImageShape));
 
