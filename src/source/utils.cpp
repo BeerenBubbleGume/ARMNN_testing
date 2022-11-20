@@ -139,7 +139,7 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
 nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
     auto inputImageShape = vector<float>((img.cols, img.rows));
     img.convertTo(img, 5);
-    nc::NdArray<float> array((float*)img.data, img.rows, img.cols);
+    nc::NdArray<float> array((float*)img.data, img.total() + (float*)img.data);
     /*if (img.isContinuous()) 
         //array.assign((float*)img.datastart, (float*)img.dataend);
         array;
