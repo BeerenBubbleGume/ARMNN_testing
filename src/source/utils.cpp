@@ -102,7 +102,7 @@ cv::Mat ABC::preprocessInput(cv::Mat image){
 vector<nc::NdArray<float>> TRTModule::trtInference(cv::Mat inputData, list<float> imgz){
     vector<Ort::Value> ortInputs;
     const vector<int64_t> shape{inputData.rows, inputData.cols};
-    vector<float> inputTensorValues(shape.size());
+    vector<float> inputTensorValues(inputData.size().area());
     inputTensorValues.assign(inputData.begin<float>(), inputData.end<float>()); 
     ortInputs.push_back(Ort::Experimental::Value::CreateTensor(inputData.data, inputTensorValues.size(), shape));
     ortInputs = session->Run(session->GetInputNames(), 
