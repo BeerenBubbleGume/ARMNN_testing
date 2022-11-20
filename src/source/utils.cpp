@@ -96,16 +96,15 @@ void display_process_time(){
 
 cv::Mat ABC::preprocessInput(cv::Mat image){
     cv::divide(255.0, image, image);
-    return image;
+    return image; 
 }
 
-vector<nc::NdArray<float>> TRTModule::trtInference(nc::NdArray<float> inputData, vector<float> imgz){
+vector<nc::NdArray<float>> TRTModule::trtInference(cv::Mat inputData, vector<float> imgz){
     vector<Ort::Value> ortInputs;
-    vector<int64_t> intVec(imgz.begin(), imgz.end());
-    ortInputs.push_back(Ort::Experimental::Value::CreateTensor<float>(
-                        (inputData[inputData.rSlice(), inputData.rSlice(), inputData.rSlice()]).toStlVector().data(),
-                        inputData.toStlVector().size(), 
-                        intVec));
+    const vector<int64_t> shape{inputData.rows, inputData.cols};
+    vector<float> inputTensorValues(shape.size());
+    inputTensorValues.assign(inputData.begin<float>(), inputData.end<float>());
+    ortInputs.push_back(Ort::Experimental::Value::CreateTensor<float>(inputTensorValues.data(), inputTensorValues.size(), shape, ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT));
     ortInputs = session->Run(session->GetInputNames(), 
                         ortInputs, 
                         session->GetOutputNames());
@@ -155,7 +154,7 @@ nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
     cv::transpose(preprocessInput(imageData), imageData);
     
     /*(cv::Mat)nc::transpose(preprocessInput(nc::NdArray<float>(imageData.begin<float>(), imageData.end<float>()))).toStlVector();*/
-    vector<nc::NdArray<float>> __boxes__classes__scores(trtInference(nc::NdArray<float>((float*)imageData.data, imageData.rows, imageData.cols), inputImageShape));
+    vector<nc::NdArray<float>> __boxes__classes__scores(trtInference(imageData, inputImageShape));
 
     auto image = draw_visual(img, __boxes__classes__scores[0], 
                             __boxes__classes__scores[1], 
