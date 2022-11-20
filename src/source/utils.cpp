@@ -104,7 +104,7 @@ vector<nc::NdArray<float>> TRTModule::trtInference(cv::Mat inputData, vector<flo
     const vector<int64_t> shape{inputData.rows, inputData.cols};
     vector<float> inputTensorValues(shape.size());
     inputTensorValues.assign(inputData.begin<float>(), inputData.end<float>());
-    ortInputs.push_back(Ort::Experimental::Value::CreateTensor<float>(inputTensorValues.data(), inputTensorValues.size(), shape, ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT));
+    ortInputs.push_back(Ort::Experimental::Value::CreateTensor(inputTensorValues.data(), inputTensorValues.size(), shape));
     ortInputs = session->Run(session->GetInputNames(), 
                         ortInputs, 
                         session->GetOutputNames());
