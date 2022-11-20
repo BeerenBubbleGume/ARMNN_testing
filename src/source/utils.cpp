@@ -99,7 +99,7 @@ cv::Mat ABC::preprocessInput(cv::Mat image){
     return image; 
 }
 
-vector<nc::NdArray<float>> TRTModule::trtInference(cv::Mat inputData, vector<float> imgz){
+vector<nc::NdArray<float>> TRTModule::trtInference(cv::Mat inputData, list<float> imgz){
     vector<Ort::Value> ortInputs;
     const vector<int64_t> shape{inputData.rows, inputData.cols};
     vector<float> inputTensorValues(shape.size());
@@ -139,7 +139,7 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
 }
 
 nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
-    auto inputImageShape = vector<float>((img.cols, img.rows));
+    list<float> inputImageShape = {(float)img.rows, (float)img.cols};
     img.convertTo(img, 5);
     //vector<vector<float>> array((float*)img.data, img.total() + (float*)img.data);
     /*if (img.isContinuous()) 

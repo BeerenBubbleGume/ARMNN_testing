@@ -46,7 +46,7 @@ protected:
     vector<float> imageShape;
     bboxes* box;
 
-    vector<nc::NdArray<float>> trtInference(cv::Mat intpuData, vector<float> imgz);
+    vector<nc::NdArray<float>> trtInference(cv::Mat intpuData, list<float> imgz);
     void loadModelAndPredict(string pathModel);
     virtual ~TRTModule();
     
