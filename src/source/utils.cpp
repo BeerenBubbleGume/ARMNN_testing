@@ -153,9 +153,15 @@ nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
             array.insert(array.end(), img.ptr<float>(i), img.ptr<float>(i)+img.cols*img.channels());
     }*/
     
-    cv::Mat imageData = letterbox(img, imageShape);
-    imageData = (cv::Mat)nc::transpose(preprocessInput(nc::NdArray<float>(imageData))).toStlVector();
-    
+    cv::Mat_ imageData = cv::Mat_<float>(letterbox(img, imageShape)); 
+    for (int row = 0; row < imageData.rows; ++row)
+    {
+        for (int col = 0; col < imageData.cols; ++col){
+            imageData(col, row) = imageData(row, col);
+        } 
+    }
+    cv::divide(255.0, imageData, imageData);
+    /*(cv::Mat)nc::transpose(preprocessInput(nc::NdArray<float>(imageData.begin<float>(), imageData.end<float>()))).toStlVector();*/
     vector<nc::NdArray<float>> __boxes__classes__scores(trtInference(nc::NdArray<float>((float*)imageData.data, imageData.rows, imageData.cols), inputImageShape));
 
     auto image = draw_visual(img, __boxes__classes__scores[0], 
