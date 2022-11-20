@@ -140,7 +140,7 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
 
 nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
     list<float> inputImageShape = {(float)img.rows, (float)img.cols};
-    img.convertTo(img, 5);
+    //img.convertTo(img, 5);
     //vector<vector<float>> array((float*)img.data, img.total() + (float*)img.data);
     /*if (img.isContinuous()) 
         //array.assign((float*)img.datastart, (float*)img.dataend);
@@ -150,7 +150,7 @@ nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
             array.insert(array.end(), img.ptr<float>(i), img.ptr<float>(i)+img.cols*img.channels());
     }*/
     
-    cv::Mat_ imageData = cv::Mat_<float>(letterbox(img, imageShape)); 
+    cv::Mat imageData = letterbox(img, imageShape); 
     cv::transpose(imageData, imageData);
     imageData = preprocessInput(imageData);
     /*(cv::Mat)nc::transpose(preprocessInput(nc::NdArray<float>(imageData.begin<float>(), imageData.end<float>()))).toStlVector();*/
