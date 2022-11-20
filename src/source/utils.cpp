@@ -158,9 +158,10 @@ nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
     {
         for (int col = 0; col < imageData.cols; ++col){
             imageData(col, row) = imageData(row, col);
+            imageData(col, row) /= 255.0;
         } 
     }
-    cv::divide(255.0, imageData, imageData);
+    
     /*(cv::Mat)nc::transpose(preprocessInput(nc::NdArray<float>(imageData.begin<float>(), imageData.end<float>()))).toStlVector();*/
     vector<nc::NdArray<float>> __boxes__classes__scores(trtInference(nc::NdArray<float>((float*)imageData.data, imageData.rows, imageData.cols), inputImageShape));
 
