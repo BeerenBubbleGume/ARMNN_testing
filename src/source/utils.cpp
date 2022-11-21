@@ -105,10 +105,8 @@ vector<nc::NdArray<float>> TRTModule::trtInference(cv::Mat inputData, list<float
     //vector<float> inputTensorValues(inputData.size().area());
     //inputTensorValues.assign(inputData.begin<float>(), inputData.end<float>()); 
     ortInputs.push_back(Ort::Experimental::Value::CreateTensor((float*)inputData.data, inputData.size().area(), session.GetInputShapes()[0]));
-    
-    ortInputs = session.Run(session.GetInputNames(), ortInputs, session.GetOutputNames());
-    float* data = const_cast<float*>(ortInputs.data()->GetUnowned().GetTensorData<float>());
-    return box->preprocess(nc::NdArray<float>(*data), imageShape, imgz);
+
+    return box->preprocess(ortInputs, imageShape, imgz);
 }
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     

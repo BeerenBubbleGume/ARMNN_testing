@@ -30,14 +30,25 @@ nc::NdArray<float> bboxes::yolo_correct_boxes(nc::NdArray<float>  box_xy, nc::Nd
     return boxes;
 }
 
-vector<nc::NdArray<float>> bboxes::preprocess(nc::NdArray<float> output, vector<float> image_data, list<float> image_shape){
-    auto boxXY = (output(output.rSlice(), {0, 2}) + output(output.rSlice(), {2, 4})) / 2.f;
-    auto boxWH = output(output.rSlice(), {2, 4}) - output(output.rSlice(), {0, 2});
-
-    output(output.rSlice(), output.rSlice(4)) = yolo_correct_boxes(boxXY, boxWH, image_data, image_shape);
-    vector<nc::NdArray<float>> ret = {output(output.rSlice(), output.rSlice(4)), output(output.rSlice(), 
-                                        output.rSlice(4)) * output(output.rSlice(),output.rSlice(5)),
-                                        nc::NdArray<float>(output(output.rSlice(), output.rSlice(6)))};
+vector<nc::NdArray<float>> bboxes::preprocess(nc::NdArray<Ort::Value> output, vector<float> image_data, list<float> image_shape){
+    Ort::Value &pred = output.at(0);
+    auto predDims = output.data()->GetTensorTypeAndShapeInfo().GetShape();
+    auto numAncors = predDims.at(1);
+    vector<float> outputData;
+    for (auto i = 0; i < numAncors; ++i){
+        outputData.push_back(pred.At<float>({0, i, 0}));
+        outputData.push_back(pred.At<float>({0, i, 1}));
+        outputData.push_back(pred.At<float>({0, i, 2}));
+        outputData.push_back(pred.At<float>({0, i, 3}));
+    }
+    auto boxXY = (nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(), {0, 2}) + nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(), {2, 4})) / 2.f;
+    auto boxWH = nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(), {2, 4}) - nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(), {0, 2});
+    
+    nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(), nc::NdArray<float>(outputData).rSlice(4)) = yolo_correct_boxes(boxXY, boxWH, image_data, image_shape);
+    vector<nc::NdArray<float>> ret = {nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(), nc::NdArray<float>(outputData).rSlice(4)), 
+                                        nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(), 
+                                        nc::NdArray<float>(outputData).rSlice(4)) * nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(),nc::NdArray<float>(outputData).rSlice(5)),
+                                        nc::NdArray<float>(nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(), nc::NdArray<float>(outputData).rSlice(6)))};
     
     return ret;
 }

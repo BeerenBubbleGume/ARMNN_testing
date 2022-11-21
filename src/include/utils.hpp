@@ -1,7 +1,6 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 #include "bbox.hpp"
-#include <onnxruntime/core/session/experimental_onnxruntime_cxx_api.h>
 #include <limits>
 struct ABC{
     static vector<string> get_classes(string classes_path);
