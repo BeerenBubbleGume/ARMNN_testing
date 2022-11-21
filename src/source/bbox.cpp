@@ -34,21 +34,22 @@ vector<nc::NdArray<float>> bboxes::preprocess(vector<Ort::Value> output, vector<
     Ort::Value &pred = output.at(0);
     auto predDims = output.data()->GetTensorTypeAndShapeInfo().GetShape();
     auto numAncors = predDims.at(1);
-    vector<float> outputData;
+    nc::NdArray<float> outputData;
     for (auto i = 0; i < numAncors; ++i){
-        outputData.push_back(pred.At<float>({0, i, 0}));
-        outputData.push_back(pred.At<float>({0, i, 1}));
-        outputData.push_back(pred.At<float>({0, i, 2}));
-        outputData.push_back(pred.At<float>({0, i, 3}));
+        outputData.toStlVector().push_back(pred.At<float>({0, i, 0}));
+        outputData.toStlVector().push_back(pred.At<float>({0, i, 1}));
+        outputData.toStlVector().push_back(pred.At<float>({0, i, 2}));
+        outputData.toStlVector().push_back(pred.At<float>({0, i, 3}));
     }
-    auto boxXY = (nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(), {0, 2}) + nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(), {2, 4})) / 2.f;
-    auto boxWH = nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(), {2, 4}) - nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(), {0, 2});
+    auto boxXY = (outputData(outputData.rSlice(), {0, 2}) + outputData(outputData.rSlice(), {2, 4})) / 2.f;
+    auto boxWH = outputData(outputData.rSlice(), {2, 4}) - outputData(nc::NdArray<float>(outputData).rSlice(), {0, 2});
     
-    nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(), nc::NdArray<float>(outputData).rSlice(4)) = yolo_correct_boxes(boxXY, boxWH, image_data, image_shape);
-    vector<nc::NdArray<float>> ret = {nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(), nc::NdArray<float>(outputData).rSlice(4)), 
-                                        nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(), 
-                                        nc::NdArray<float>(outputData).rSlice(4)) * nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(),nc::NdArray<float>(outputData).rSlice(5)),
-                                        nc::NdArray<float>(nc::NdArray<float>(outputData)(nc::NdArray<float>(outputData).rSlice(), nc::NdArray<float>(outputData).rSlice(6)))};
+    outputData(outputData.rSlice(), outputData.rSlice(4)) 
+                    = yolo_correct_boxes(boxXY, boxWH, image_data, image_shape);
+    vector<nc::NdArray<float>> ret = {outputData(outputData.rSlice(), outputData.rSlice(4)), 
+                                        outputData(outputData.rSlice(), 
+                                        outputData.rSlice(4)) * outputData(outputData.rSlice(),outputData.rSlice(5)),
+                                        outputData(outputData.rSlice(), outputData.rSlice(6))};
     
     return ret;
 }
