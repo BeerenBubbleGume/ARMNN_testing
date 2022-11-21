@@ -30,7 +30,7 @@ nc::NdArray<float> bboxes::yolo_correct_boxes(nc::NdArray<float>  box_xy, nc::Nd
     return boxes;
 }
 
-vector<nc::NdArray<float>> bboxes::preprocess(vector<Ort::Value> output, vector<float> image_data, list<float> image_shape){
+vector<nc::NdArray<float>> bboxes::preprocess(vector<Ort::Value> &output, vector<float> image_data, list<float> image_shape){
     Ort::Value &pred = output.at(0);
     auto predDims = output.data()->GetTensorTypeAndShapeInfo().GetShape();
     auto numAncors = predDims.at(1);
