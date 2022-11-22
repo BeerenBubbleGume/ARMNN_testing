@@ -36,10 +36,14 @@ vector<nc::NdArray<float>> bboxes::preprocess(vector<Ort::Value> &output, vector
     auto numAncors = predDims.at(1);
     nc::NdArray<float> outputData;
     for (auto i = 1; i < numAncors; ++i){
-        nc::add(pred.At<float>({0,i,0}), outputData);
-        nc::add(pred.At<float>({0,i,1}), outputData);
-        nc::add(pred.At<float>({0,i,2}), outputData);
-        nc::add(pred.At<float>({0,i,3}), outputData);
+        float dx = pred.At<float>({0,i,0});
+        float dy = pred.At<float>({0,i,1});
+        float dw = pred.At<float>({0,i,2});
+        float dh = pred.At<float>({0,i,3});
+        nc::add(dx, outputData);
+        nc::add(dy, outputData);
+        nc::add(dw, outputData);
+        nc::add(dh, outputData);
     }
     auto boxXY = (outputData(outputData.rSlice(), {0, 2}) + outputData(outputData.rSlice(), {2, 4})) / 2.f;
     auto boxWH = outputData(outputData.rSlice(), {2, 4}) - outputData(nc::NdArray<float>(outputData).rSlice(), {0, 2});
