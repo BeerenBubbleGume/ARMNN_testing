@@ -36,7 +36,7 @@ vector<nc::NdArray<float>> bboxes::preprocess(vector<Ort::Value> &output, vector
     auto numAncors = predDims.at(1);
     nc::NdArray<float> outputData;
     for (auto i = 0; i < numAncors; ++i){
-        nc::add(pred.At<float>({0,i,0}), outputData);
+        //nc::add(pred.At<float>({0,i,0}), outputData);
         nc::add(pred.At<float>({0,i,1}), outputData);
         nc::add(pred.At<float>({0,i,2}), outputData);
         nc::add(pred.At<float>({0,i,3}), outputData);
