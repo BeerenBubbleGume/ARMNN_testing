@@ -102,9 +102,9 @@ cv::Mat ABC::preprocessInput(cv::Mat image){
 vector<nc::NdArray<float>> TRTModule::trtInference(cv::Mat inputData, list<float> imgz){
     vector<Ort::Value> ortInputs;
     vector<float> tensor_value_handler;
-    const unsigned int target_height = session.GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape().at(1);
+    const unsigned int target_channel = session.GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape().at(1);
     const unsigned int target_width = session.GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape().at(2);
-    const unsigned int target_channel = session.GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape().at(3);
+    const unsigned int target_height = session.GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape().at(3);
     const unsigned int target_tensor_size = target_channel * target_height * target_width;
     unsigned channels = inputData.channels();
     if (target_channel != channels) throw std::runtime_error("channel mismatch!");
