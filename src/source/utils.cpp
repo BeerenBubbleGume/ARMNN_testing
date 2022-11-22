@@ -125,7 +125,7 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     auto width = cap.get(cv::CAP_PROP_FRAME_WIDTH);
     auto height = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
     std::chrono::duration<double> prevFrameTime = std::chrono::system_clock::now().time_since_epoch();
-    auto fourcc = cv::VideoWriter::fourcc('M','P','4','V');
+    auto fourcc = cv::VideoWriter::fourcc('D','I','V','X');
     auto out = cv::VideoWriter(outputPath, fourcc, fps, cv::Size(width, height));
 
     do{
