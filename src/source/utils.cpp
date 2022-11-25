@@ -145,7 +145,7 @@ void TRTModule::initHandlers(){
 }
 
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
-    
+    initHandlers();
     auto cap = cv::VideoCapture(videoSrc);
     cv::Mat frame;
     cap.read(cv::OutputArray(frame));
@@ -243,7 +243,6 @@ TRTModule::TRTModule(string pathModel, string pathClasses){
     Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "example-model-explorer");
     session = new Ort::Session(env, pathModel.c_str(), session_options);
     classLabels.push_back(*get_classes(pathClasses).data());
-    initHandlers();
     imageShape = {640.f, 640.f};
     classColors = {0.f, 0.f, 255.f};
     //inputName += "conv2d_input";
