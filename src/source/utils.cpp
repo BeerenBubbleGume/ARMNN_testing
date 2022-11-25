@@ -29,7 +29,7 @@ cv::Mat ABC::letterbox(cv::Mat image, vector<float> expected_size){
     auto nw = (iw * scale);
     iw /= 2, ih /= 2;
     cv::resize(image, image, cv::Size(nw, nh), 0.0, 0.0, cv::INTER_CUBIC);
-    cv::Mat newImage/* = nc::full(nc::Shape(eh, ew), 128.f)*/;
+    cv::Mat newImage((int)eh, (int)ew, 0, cv::Scalar(128.0))/* = nc::full(nc::Shape(eh, ew), 128.f)*/;
     int top = int(round(eh - 1.0));
     int bottom = int(round(eh + 1.0));
     int left = int(round(ew - 1.0));
@@ -113,6 +113,7 @@ vector<nc::NdArray<float>> TRTModule::trtInference(cv::Mat inputData, list<float
     std::memcpy(tensor_value_handler.data(), inputData.data, target_tensor_size * sizeof(float));
     ortInputs.push_back(Ort::Experimental::Value::CreateTensor(tensor_value_handler.data(),
                                         target_tensor_size, session.GetInputShapes()[0]));
+    
     auto outputTensor = session.Run(session.GetInputNames(), ortInputs, session.GetOutputNames());
     return box->preprocess(outputTensor, imageShape, imgz);
 }

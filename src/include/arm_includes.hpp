@@ -11,7 +11,7 @@
 #include <armnn/LayerSupport.hpp>*/
 //#include <armnnUtils/HeapProfiling.hpp>
 #include <onnxruntime/core/session/experimental_onnxruntime_cxx_api.h>
-#include <opencv4/opencv2/opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include <vector>
 #include <sstream>
 #include <float.h>

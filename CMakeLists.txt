@@ -46,8 +46,7 @@ find_package(PkgConfig)
 #find_package(OpenCV REQUIRED)
 target_include_directories(ARMNN_test PUBLIC
                         "/usr/local/include/"
-                        "/usr/include/opencv4/"
-                        "/usr/include/")
+                        "/usr/include/opencv4/")
 target_link_libraries(ARMNN_test
                         opencv_calib3d
                         opencv_core
