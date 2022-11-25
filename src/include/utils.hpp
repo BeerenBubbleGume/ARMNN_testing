@@ -29,9 +29,6 @@ private:
     vector<float> inputValuesHandler;
     vector<const char*> inputNodeNames;
     vector<const char*> outputNodeNames;
-    string inputName;
-    string outputName;
-    string inVideoName;
     Ort::Session* session = nullptr;
     /*armnnOnnxParser::IOnnxParserPtr* parser;
     armnn::INetworkPtr* network;
@@ -49,6 +46,7 @@ private:
     int numNames;
     unsigned inputTensorSize = 1;
     int numOutputs = 1;
+    const char* inputName = nullptr;
     vector<float> imageShape;
     bboxes* box;
 

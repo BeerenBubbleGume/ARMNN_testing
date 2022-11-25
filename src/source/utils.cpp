@@ -121,7 +121,8 @@ vector<nc::NdArray<float>> TRTModule::trtInference(cv::Mat inputData, list<float
 void TRTModule::initHandlers(){
     Ort::AllocatorWithDefaultOptions allocator;
     inputNodeNames.resize(1); 
-    inputNodeNames[0] = session->GetInputNameAllocated(0, allocator).get();
+    inputName = session->GetInputNameAllocated(0, allocator).get();
+    inputNodeNames[0] = inputName;
     
     Ort::TypeInfo typeInfo = session->GetInputTypeInfo(0);
     auto tensorInfo = typeInfo.GetTensorTypeAndShapeInfo();
