@@ -120,12 +120,13 @@ vector<nc::NdArray<float>> TRTModule::trtInference(cv::Mat inputData, list<float
 
 void TRTModule::initHandlers(){
     Ort::AllocatorWithDefaultOptions allocator;
+    inputNodeNames.resize(1); 
+    inputNodeNames[0] = session->GetInputNameAllocated(0, allocator).get();
+    
     Ort::TypeInfo typeInfo = session->GetInputTypeInfo(0);
     auto tensorInfo = typeInfo.GetTensorTypeAndShapeInfo();
     inputTensorSize = 1;
     inputNodeDims = tensorInfo.GetShape();
-    inputNodeNames.resize(1);
-    inputNodeNames[0] = session->GetInputNameAllocated(0, allocator).get();
     for(auto i = 0; i < inputNodeDims.size(); ++i){
         inputTensorSize *= inputNodeDims.at(i);
     }
@@ -140,8 +141,7 @@ void TRTModule::initHandlers(){
         auto outputDim = outputTensorInfo.GetShape();
         outputNodeDims.push_back(outputDim);
     }
-    if(outputNodeNames[0] == "")
-        outputNodeNames[0] = (classLabels.data()->c_str());
+    
 }
 
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
