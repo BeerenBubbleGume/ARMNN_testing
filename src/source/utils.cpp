@@ -140,7 +140,8 @@ void TRTModule::initHandlers(){
         auto outputDim = outputTensorInfo.GetShape();
         outputNodeDims.push_back(outputDim);
     }
-    outputNodeNames[0] == "" ? "" : classLabels[0].c_str();
+    if(outputNodeNames[0] == "")
+        outputNodeNames.push_back(classLabels.data()->c_str());
 }
 
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
@@ -241,10 +242,10 @@ TRTModule::TRTModule(string pathModel, string pathClasses){
     Ort::SessionOptions session_options;
     Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "example-model-explorer");
     session = new Ort::Session(env, pathModel.c_str(), session_options);
+    classLabels.push_back(*get_classes(pathClasses).data());
     initHandlers();
     imageShape = {640.f, 640.f};
     classColors = {0.f, 0.f, 255.f};
-    classLabels.push_back(*get_classes(pathClasses).data());
     //inputName += "conv2d_input";
     //outputName += "activation_5/Softmax";
     
