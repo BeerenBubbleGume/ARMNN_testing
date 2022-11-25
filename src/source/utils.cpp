@@ -141,7 +141,7 @@ void TRTModule::initHandlers(){
         outputNodeDims.push_back(outputDim);
     }
     if(outputNodeNames[0] == "")
-        outputNodeNames.push_back(classLabels.data()->c_str());
+        outputNodeNames[0] = (classLabels.data()->c_str());
 }
 
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
