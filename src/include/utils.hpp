@@ -24,10 +24,15 @@ enum TRT_INTERFERENCE{
 class TRTModule : public ABC{
 protected:
     vector<string> classLabels;
+    vector<int64_t> inputNodeDims;
+    vector<vector<int64_t>> outputNodeDims;
+    vector<float> inputValuesHandler;
+    vector<const char*> inputNodeNames;
+    vector<const char*> outputNodeNames;
     string inputName;
     string outputName;
     string inVideoName;
-    Ort::Experimental::Session session;
+    Ort::Session* session = nullptr;
     /*armnnOnnxParser::IOnnxParserPtr* parser;
     armnn::INetworkPtr* network;
     vector<armnnUtils::TContainer> inputDataContainers;
@@ -42,15 +47,18 @@ protected:
     int inputTensorBatchSize;*/
     vector<float> classColors;
     int numNames;
+    unsigned inputTensorSize = 1;
+    int numOutputs = 1;
     vector<float> imageShape;
     bboxes* box;
 
     vector<nc::NdArray<float>> trtInference(cv::Mat intpuData, list<float> imgz);
     void loadModelAndPredict(string pathModel);
+    void initHandlers();
     virtual ~TRTModule();
     
 public:
-    TRTModule(string pathModel, string pathClasses, Ort::SessionOptions& session_options, Ort::Env& env);
+    TRTModule(string pathModel, string pathClasses);
     nc::NdArray<float> extractImage(cv::Mat img);
     void startNN(string videoSrc, string outputPath, int fps);
 };

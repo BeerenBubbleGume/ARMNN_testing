@@ -102,9 +102,9 @@ cv::Mat ABC::preprocessInput(cv::Mat image){
 vector<nc::NdArray<float>> TRTModule::trtInference(cv::Mat inputData, list<float> imgz){
     vector<Ort::Value> ortInputs;
     vector<float> tensor_value_handler;
-    const unsigned int target_channel = session.GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape().at(1);
-    const unsigned int target_width = session.GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape().at(2);
-    const unsigned int target_height = session.GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape().at(3);
+    const unsigned int target_channel = session->GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape().at(1);
+    const unsigned int target_width = session->GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape().at(2);
+    const unsigned int target_height = session->GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape().at(3);
     const unsigned int target_tensor_size = target_channel * target_height * target_width;
     unsigned channels = inputData.channels();
     if (target_channel != channels) throw std::runtime_error("channel mismatch!");
@@ -112,11 +112,35 @@ vector<nc::NdArray<float>> TRTModule::trtInference(cv::Mat inputData, list<float
 
     std::memcpy(tensor_value_handler.data(), inputData.data, target_tensor_size * sizeof(float));
     ortInputs.push_back(Ort::Experimental::Value::CreateTensor(tensor_value_handler.data(),
-                                        target_tensor_size, session.GetInputShapes()[0]));
+                                        target_tensor_size, inputNodeDims));
     
-    auto outputTensor = session.Run(session.GetInputNames(), ortInputs, session.GetOutputNames());
+    auto outputTensor = session->Run(Ort::RunOptions(nullptr), inputNodeNames.data(), ortInputs.data(), 1, outputNodeNames.data(), 1);
     return box->preprocess(outputTensor, imageShape, imgz);
 }
+
+void TRTModule::initHandlers(){
+    Ort::AllocatorWithDefaultOptions allocator;
+    Ort::TypeInfo typeInfo = session->GetInputTypeInfo(0);
+    auto tensorInfo = typeInfo.GetTensorTypeAndShapeInfo();
+    inputTensorSize = 1;
+    inputNodeDims = tensorInfo.GetShape();
+
+    for(auto i = 0; i < inputNodeDims.size(); ++i){
+        inputTensorSize *= inputNodeDims.at(i);
+    }
+    
+    inputValuesHandler.resize(inputTensorSize);
+    numOutputs = session->GetOutputCount();
+    outputNodeNames.resize(numOutputs);
+    for(auto i = 0; i < numOutputs; ++i){
+        outputNodeNames[i] = session->GetOutputNameAllocated(i, allocator).get();
+        Ort::TypeInfo outputTypeInfo = session->GetOutputTypeInfo(i);
+        auto outputTensorInfo = outputTypeInfo.GetTensorTypeAndShapeInfo();
+        auto outputDim = outputTensorInfo.GetShape();
+        outputNodeDims.push_back(outputDim);
+    }
+}
+
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
     
     auto cap = cv::VideoCapture(videoSrc);
@@ -146,6 +170,7 @@ void TRTModule::startNN(string videoSrc, string outputPath, int fps){
 
 nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
     list<float> inputImageShape = {(float)img.rows, (float)img.cols};
+    
     //img.convertTo(img, 5);
     //vector<vector<float>> array((float*)img.data, img.total() + (float*)img.data);
     /*if (img.isContinuous()) 
@@ -208,10 +233,13 @@ nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
     // std::cout << modelOutputLabels[labelInd] << std::endl;
 }*/
 
-TRTModule::TRTModule(string pathModel, string pathClasses, Ort::SessionOptions& session_options, Ort::Env& env)
- : session(Ort::Experimental::Session(env, pathModel, session_options)){
+TRTModule::TRTModule(string pathModel, string pathClasses){
     //session = &(*session); 
     box = new bboxes;
+    Ort::SessionOptions session_options;
+    Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "example-model-explorer");
+    session = new Ort::Session(env, pathModel.c_str(), session_options);
+    initHandlers();
     imageShape = {640.f, 640.f};
     classColors = {0.f, 0.f, 255.f};
     classLabels.push_back(*get_classes(pathClasses).data());
