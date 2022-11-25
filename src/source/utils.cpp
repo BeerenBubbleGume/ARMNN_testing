@@ -124,7 +124,8 @@ void TRTModule::initHandlers(){
     auto tensorInfo = typeInfo.GetTensorTypeAndShapeInfo();
     inputTensorSize = 1;
     inputNodeDims = tensorInfo.GetShape();
-
+    inputNodeNames.resize(1);
+    inputNodeNames[0] = session->GetInputNameAllocated(0, allocator).get();
     for(auto i = 0; i < inputNodeDims.size(); ++i){
         inputTensorSize *= inputNodeDims.at(i);
     }
