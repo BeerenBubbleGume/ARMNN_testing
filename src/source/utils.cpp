@@ -140,6 +140,7 @@ void TRTModule::initHandlers(){
         auto outputDim = outputTensorInfo.GetShape();
         outputNodeDims.push_back(outputDim);
     }
+    outputNodeNames[0] == "" ? "" : classLabels[0].c_str();
 }
 
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
