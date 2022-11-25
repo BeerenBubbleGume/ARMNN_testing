@@ -111,8 +111,9 @@ vector<nc::NdArray<float>> TRTModule::trtInference(cv::Mat inputData, list<float
     tensor_value_handler.resize(target_tensor_size);
 
     std::memcpy(tensor_value_handler.data(), inputData.data, target_tensor_size * sizeof(float));
-    ortInputs.push_back(Ort::Experimental::Value::CreateTensor(tensor_value_handler.data(),
-                                        target_tensor_size, inputNodeDims));
+    ortInputs.push_back(Ort::Value::CreateTensor<float>(Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeCPU), 
+                                        tensor_value_handler.data(), target_tensor_size, 
+                                        inputNodeDims.data(), inputNodeDims.size()));
     
     auto outputTensor = session->Run(Ort::RunOptions(nullptr), inputNodeNames.data(), ortInputs.data(), 1, outputNodeNames.data(), 1);
     return box->preprocess(outputTensor, imageShape, imgz);
