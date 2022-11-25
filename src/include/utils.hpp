@@ -3,11 +3,11 @@
 #include "bbox.hpp"
 #include <limits>
 struct ABC{
-    static vector<string> get_classes(string classes_path);
-    static cv::Mat letterbox(cv::Mat image, vector<float> expected_size);
-    static nc::NdArray<float> draw_visual(cv::Mat image, nc::NdArray<float> __boxes, nc::NdArray<float> __scores,
+    vector<string> get_classes(string classes_path);
+    cv::Mat letterbox(cv::Mat image, vector<float> expected_size);
+    nc::NdArray<float> draw_visual(cv::Mat image, nc::NdArray<float> __boxes, nc::NdArray<float> __scores,
                         nc::NdArray<float> __classes, vector<string> class_labels, vector<float> class_colors);
-    static cv::Mat preprocessInput(cv::Mat image);
+    cv::Mat preprocessInput(cv::Mat image);
 };
 
 nc::NdArray<float> draw_line(nc::NdArray<float> image, int x, int y, int x1, int y1, 
@@ -22,7 +22,7 @@ enum TRT_INTERFERENCE{
 };
 
 class TRTModule : public ABC{
-protected:
+private:
     vector<string> classLabels;
     vector<int64_t> inputNodeDims;
     vector<vector<int64_t>> outputNodeDims;
