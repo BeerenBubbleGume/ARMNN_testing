@@ -123,7 +123,6 @@ void TRTModule::initHandlers(){
     inputNodeNames.resize(1); 
     inputName = session->GetInputNameAllocated(0, allocator).get();
     inputNodeNames[0] = inputName;
-    
     Ort::TypeInfo typeInfo = session->GetInputTypeInfo(0);
     auto tensorInfo = typeInfo.GetTensorTypeAndShapeInfo();
     inputTensorSize = 1;
@@ -241,8 +240,10 @@ TRTModule::TRTModule(string pathModel, string pathClasses){
     //session = &(*session); 
     box = new bboxes;
     Ort::SessionOptions session_options;
+    session_options.SetInterOpNumThreads(1);
     Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "example-model-explorer");
     session = new Ort::Session(env, pathModel.c_str(), session_options);
+    
     classLabels.push_back(*get_classes(pathClasses).data());
     imageShape = {640.f, 640.f};
     classColors = {0.f, 0.f, 255.f};
