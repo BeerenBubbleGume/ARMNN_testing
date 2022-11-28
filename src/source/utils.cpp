@@ -111,18 +111,17 @@ vector<nc::NdArray<float>> TRTModule::trtInference(cv::Mat inputData, list<float
     tensor_value_handler.resize(target_tensor_size);
 
     std::memcpy(tensor_value_handler.data(), inputData.data, target_tensor_size * sizeof(float));
-    ortInputs.push_back(Ort::Value::CreateTensor<float>(Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeCPU), 
+    ortInputs.push_back(Ort::Value::CreateTensor<float>(cpuInfo, 
                                         tensor_value_handler.data(), target_tensor_size, 
                                         inputNodeDims.data(), inputNodeDims.size()));
     
-    auto outputTensor = session->Run(Ort::RunOptions(nullptr), inputNodeNames.data(), ortInputs.data(), 1, outputNodeNames.data(), 1);
+    auto outputTensor = session->Run(Ort::RunOptions(nullptr), inputNodeNames.data(), ortInputs.data(), 1, outputNodeNames.data(), numOutputs);
     return box->preprocess(outputTensor, imageShape, imgz);
 }
 
 void TRTModule::initHandlers(){
-    Ort::AllocatorWithDefaultOptions allocator;
-    inputNodeNames.resize(1); 
     inputName = session->GetInputNameAllocated(0, allocator).get();
+    inputNodeNames.resize(1); 
     inputNodeNames[0] = inputName;
     Ort::TypeInfo typeInfo = session->GetInputTypeInfo(0);
     auto tensorInfo = typeInfo.GetTensorTypeAndShapeInfo();
@@ -136,7 +135,7 @@ void TRTModule::initHandlers(){
     numOutputs = session->GetOutputCount();
     outputNodeNames.resize(numOutputs);
     for(auto i = 0; i < numOutputs; ++i){
-        outputNodeNames[i] = session->GetOutputNameAllocated(i, allocator).get();
+        outputNodeNames.emplace_back(session->GetOutputNameAllocated(i, allocator).get());
         Ort::TypeInfo outputTypeInfo = session->GetOutputTypeInfo(i);
         auto outputTensorInfo = outputTypeInfo.GetTensorTypeAndShapeInfo();
         auto outputDim = outputTensorInfo.GetShape();
@@ -146,7 +145,6 @@ void TRTModule::initHandlers(){
 }
 
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){
-    initHandlers();
     auto cap = cv::VideoCapture(videoSrc);
     cv::Mat frame;
     cap.read(cv::OutputArray(frame));
@@ -240,11 +238,13 @@ nc::NdArray<float> TRTModule::extractImage(cv::Mat img){
 TRTModule::TRTModule(string pathModel, string pathClasses){
     //session = &(*session); 
     box = new bboxes;
-    Ort::SessionOptions session_options;
-    session_options.SetInterOpNumThreads(1);
-    Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "example-model-explorer");
-    session = new Ort::Session(env, pathModel.c_str(), session_options);
+    session_options.SetGraphOptimizationLevel(
+      GraphOptimizationLevel::ORT_ENABLE_ALL);
+    session_options.SetLogSeverityLevel(4);
     
+    env = new Ort::Env(ORT_LOGGING_LEVEL_ERROR, "yolox");
+    session = new Ort::Session(*env, pathModel.c_str(), session_options);
+    initHandlers();
     classLabels.push_back(*get_classes(pathClasses).data());
     imageShape = {640.f, 640.f};
     classColors = {0.f, 0.f, 255.f};

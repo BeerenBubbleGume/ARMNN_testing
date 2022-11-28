@@ -29,6 +29,10 @@ private:
     vector<float> inputValuesHandler;
     vector<const char*> inputNodeNames;
     vector<const char*> outputNodeNames;
+    Ort::AllocatorWithDefaultOptions allocator;
+    Ort::SessionOptions session_options;
+    Ort::Env* env;
+    Ort::MemoryInfo cpuInfo = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeCPU);
     Ort::Session* session;
     /*armnnOnnxParser::IOnnxParserPtr* parser;
     armnn::INetworkPtr* network;
