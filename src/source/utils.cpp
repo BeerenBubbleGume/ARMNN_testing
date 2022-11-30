@@ -127,19 +127,19 @@ void TRTModule::initHandlers(){
     auto tensorInfo = typeInfo.GetTensorTypeAndShapeInfo();
     inputTensorSize = 1;
     inputNodeDims = tensorInfo.GetShape();
-    for(auto i = 0; i < inputNodeDims.size(); ++i){
+    for(int i = 0; i < (int)inputNodeDims.size(); ++i){
         inputTensorSize *= inputNodeDims.at(i);
     }
     
     inputValuesHandler.resize(inputTensorSize);
     numOutputs = session->GetOutputCount();
     outputNodeNames.resize(numOutputs);
-    for(auto i = 0; i < numOutputs; ++i){
-        outputNodeNames.emplace_back(session->GetOutputNameAllocated(i, allocator).get());
-        Ort::TypeInfo outputTypeInfo = session->GetOutputTypeInfo(i);
+    for(int i = 0; i < numOutputs; ++i){
+        outputNodeNames[i] = session->GetOutputNameAllocated(i, allocator).get();
+        /*Ort::TypeInfo outputTypeInfo = session->GetOutputTypeInfo(i);
         auto outputTensorInfo = outputTypeInfo.GetTensorTypeAndShapeInfo();
-        auto outputDim = outputTensorInfo.GetShape();
-        outputNodeDims.push_back(outputDim);
+        auto outputDim = outputTensorInfo.GetShape();*/
+        outputNodeDims.push_back(session->GetOutputTypeInfo(i).GetTensorTypeAndShapeInfo().GetShape());
     }
     
 }
