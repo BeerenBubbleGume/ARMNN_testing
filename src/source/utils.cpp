@@ -123,6 +123,7 @@ void TRTModule::initHandlers(){
     inputName = session->GetInputNameAllocated(0, allocator).get();
     inputNodeNames.resize(1); 
     inputNodeNames[0] = inputName;
+    allocator.Free(inputName);
     Ort::TypeInfo typeInfo = session->GetInputTypeInfo(0);
     auto tensorInfo = typeInfo.GetTensorTypeAndShapeInfo();
     inputTensorSize = 1;
@@ -134,14 +135,14 @@ void TRTModule::initHandlers(){
     inputValuesHandler.resize(inputTensorSize);
     numOutputs = session->GetOutputCount();
     outputNodeNames.resize(numOutputs);
-    for(int i = 0; i < numOutputs; ++i){
-        outputNodeNames[i] = session->GetOutputNameAllocated(i, allocator).get();
-        /*Ort::TypeInfo outputTypeInfo = session->GetOutputTypeInfo(i);
-        auto outputTensorInfo = outputTypeInfo.GetTensorTypeAndShapeInfo();
-        auto outputDim = outputTensorInfo.GetShape();*/
-        outputNodeDims.push_back(session->GetOutputTypeInfo(i).GetTensorTypeAndShapeInfo().GetShape());
-    }
     
+    for(int i = 0; i < numOutputs; ++i){
+        Ort::TypeInfo outputTypeInfo = session->GetOutputTypeInfo(i);
+        auto outputTensorInfo = outputTypeInfo.GetTensorTypeAndShapeInfo();
+        auto outputDim = outputTensorInfo.GetShape();
+        outputNodeDims.push_back(outputDim);
+    }
+    outputNodeNames[0] = session->GetOutputNameAllocated(0, allocator).get();
 }
 
 void TRTModule::startNN(string videoSrc, string outputPath, int fps){

@@ -50,7 +50,7 @@ private:
     int numNames;
     unsigned inputTensorSize = 1;
     int numOutputs = 1;
-    const char* inputName;
+    char* inputName;
     vector<float> imageShape;
     bboxes* box;
 
